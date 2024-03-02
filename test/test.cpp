@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include <crypto/fea.hpp>
 
@@ -37,10 +38,24 @@ void fea_test()
     wmkc::misc::PRINT(content, length, 32, 1, 0);
 }
 
+void file_test()
+{
+    std::fstream f(L"F:/A-传送文件夹/图片/447.2.jpg", std::ios::in | std::ios::binary);
+    if(!f.is_open()) {
+        std::cout << "failed to file open." << std::endl;
+        return;
+    }
+
+    uint8_t buffer[8] = {0};
+
+    f.read((char *)buffer, 8);
+
+    wmkc::misc::PRINT(buffer, sizeof(buffer), (sizeof(buffer) > 8)?16:sizeof(buffer), 0, 0);
+}
+
 int main(int argc, char **argv)
 {
-    fea_speed_test();
-    // fea_test();
+    file_test();
 
     return 0;
 }

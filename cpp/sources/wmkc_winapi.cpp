@@ -6,7 +6,7 @@ struct wmkc::winapi::widthHeight wmkc::winapi::getScreenResolution()
     size.width = GetSystemMetrics(SM_CXSCREEN);
     size.height = GetSystemMetrics(SM_CYSCREEN);
     if(!size.width || !size.height) {
-        wmkcErr_exception(wmkcErr_Err32, "wmkc::winapi::getScreenResolution",
+        wmkc::exception(wmkcErr_Err, "wmkc::winapi::getScreenResolution",
             "GetSystemMetrics function returned an error code when called.");
     }
 }
@@ -16,7 +16,7 @@ struct wmkc::winapi::widthHeight wmkc::winapi::getCursorPos()
     wmkc::winapi::widthHeight point;
     POINT _point_tmp = {0};
     if(!GetCursorPos(&_point_tmp)) {
-        wmkcErr_exception(GetLastError(), "wmkc::winapi::getCursorPos",
+        wmkc::exception(GetLastError(), "wmkc::winapi::getCursorPos",
             "GetCursorPos function returned an error code when called.");
     }
     point.width = _point_tmp.x;
@@ -41,10 +41,39 @@ std::string wmkc::winapi::getUserName(wmkcChar format = 'A')
 wmkcVoid wmkc::winapi::setCursorPos(wmkc_u32 x, wmkc_u32 y)
 {
     if(!SetCursorPos(x, y)) {
-        wmkcErr_exception(wmkcErr_ErrSysFunc, "wmkc::winapi::setCursorPos",
+        wmkc::exception(wmkcErr_ErrSysFunc, "wmkc::winapi::setCursorPos",
             "SetCursorPos function returned an error code when called.");
     }
 }
+
+// #include <windows.h>
+// #include <Wininet.h>
+// #include <shlobj.h>
+// bool SetWallpaper(const std::wstring& file, DWORD style) {
+//     // 初始化COM组件
+//     CoInitialize(NULL);
+//     // 创建IActiveDesktop接口的实例
+//     IActiveDesktop* pIAD = NULL;
+//     HRESULT hr = CoCreateInstance(CLSID_ActiveDesktop, NULL, CLSCTX_INPROC_SERVER, IID_IActiveDesktop, (void**)&pIAD);
+//     if (FAILED(hr)) return false;
+//     // 设置壁纸的文件路径
+//     hr = pIAD->SetWallpaper(file.c_str(), 0);
+//     if (FAILED(hr)) return false;
+//     // 设置壁纸的样式
+//     WALLPAPEROPT wpo;
+//     wpo.dwSize = sizeof(wpo);
+//     wpo.dwStyle = style;
+//     hr = pIAD->SetWallpaperOptions(&wpo, 0);
+//     if (FAILED(hr)) return false;
+//     // 应用壁纸的设置
+//     hr = pIAD->ApplyChanges(AD_APPLY_ALL);
+//     if (FAILED(hr)) return false;
+//     // 释放IActiveDesktop接口的实例
+//     pIAD->Release();
+//     // 反初始化COM组件
+//     CoUninitialize();
+//     return true;
+// }
 
 wmkcVoid wmkc::winapi::setDesktopWallpaper(std::string path)
 {
