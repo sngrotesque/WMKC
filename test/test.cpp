@@ -39,8 +39,8 @@ void fea_test()
 
 int main(int argc, char **argv)
 {
-    // fea_speed_test();
-    fea_test();
+    fea_speed_test();
+    // fea_test();
 
     return 0;
 }
