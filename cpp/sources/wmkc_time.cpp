@@ -1,9 +1,9 @@
 #include <wmkc_time.hpp>
 
-std::string wmkcTime::getNowTime(std::string timeFormat)
+std::string wmkc::Time::getNowTime(std::string timeFormat)
 {
     wmkcChar time_string[66] = {0};
-    struct tm *time_ptr = wmkcNull;
+    struct tm *time_ptr = nullptr;
     time_t time_var;
 
     ::time(&time_var);
@@ -14,7 +14,7 @@ std::string wmkcTime::getNowTime(std::string timeFormat)
     return std::string(time_string);
 }
 
-wmkcVoid wmkcTime::sleep(double _t)
+wmkcVoid wmkc::Time::sleep(double _t)
 {
 #   if defined(WMKC_PLATFORM_WINOS)
     Sleep(_t * 1e3);
@@ -23,7 +23,7 @@ wmkcVoid wmkcTime::sleep(double _t)
 #   endif
 }
 
-double wmkcTime::time()
+double wmkc::Time::time()
 {
 #   if defined(WMKC_PLATFORM_WINOS)
     FILETIME ft;

@@ -1,4 +1,4 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 // 请确保先用最简单的方式实现这个库，后续再来优化性能。
 #if WMKC_SUPPORT
@@ -104,22 +104,24 @@
  *  以本机或标准 bool 类型表示的 0 或 1 将被打包，任何非零值在解包时将为 True。
 */
 
-class wmkcStruct {
-    private:
-        wmkcVoid verifySymbol(const std::string format, const wmkcSize args_length);
+namespace wmkc {
+    class structure {
+        private:
+            wmkcVoid verifySymbol(const std::string format, const wmkcSize args_length);
 
-    public:
-        // 这些数据成员请在实际上线时转为私有成员
-        wmkcByte orderSymbol;
-        wmkcBool swapEndian;
-        wmkcByte bit16[2];
-        wmkcByte bit32[4];
-        wmkcByte bit64[8];
+        public:
+            // 这些数据成员请在实际上线时转为私有成员
+            wmkcByte orderSymbol;
+            wmkcBool swapEndian;
+            wmkcByte bit16[2];
+            wmkcByte bit32[4];
+            wmkcByte bit64[8];
 
-        wmkcStruct();
-        std::string pack(std::string format, std::vector<wmkcSize> args);
-        std::vector<wmkcSize> unpack(std::string format, std::string args);
-};
+            structure();
+            std::string pack(std::string format, std::vector<wmkcSize> args);
+            std::vector<wmkcSize> unpack(std::string format, std::string args);
+    };
+}
 
 #endif
 #endif

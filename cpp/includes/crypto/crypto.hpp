@@ -1,12 +1,14 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_CRYPTO
 #include <wmkc_random.hpp>
 
-namespace wmkcCrypto {
-    wmkcVoid generate_sbox(wmkcByte *sbox);
-    wmkcVoid generate_rsbox(wmkcByte *rsbox, wmkcByte *sbox);
+namespace wmkc {
+    namespace crypto {
+        wmkcVoid generateSbox(wmkcByte *sbox);
+        wmkcVoid generateRSbox(wmkcByte *rsbox, wmkcByte *sbox);
+    }
 }
 
 #endif

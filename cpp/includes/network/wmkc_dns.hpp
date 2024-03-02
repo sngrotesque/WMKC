@@ -1,4 +1,4 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_DNS
@@ -7,8 +7,10 @@
 #include <vector>
 #include <sstream>
 
-namespace wmkcNet {
-    std::string wmkcDNS(std::string hostname, std::string dnsServer);
+namespace wmkc {
+    namespace net {
+        std::string wmkcDNS(std::string hostname, std::string dnsServer);
+    }
 }
 
 #endif

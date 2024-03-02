@@ -6,17 +6,17 @@ wmkcVoid wmkcSSL_exception(std::string funcName)
     wmkcChar err_msg[256];
     err_code = ERR_get_error();
     ERR_error_string(err_code, err_msg);
-    wmkcErr_exception(err_code, funcName, err_msg);
+    wmkc::exception(err_code, funcName, err_msg);
 }
 
-wmkcNet::wmkcSSL_Socket::wmkcSSL_Socket(SSL *_ssl, wmkcNet::Socket _fd)
+wmkc::net::ssl_socket::ssl_socket(SSL *_ssl, net::Socket _fd)
 : ssl(_ssl), fd(_fd)
 {
 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-wmkcNet::wmkcSSL_Context::wmkcSSL_Context(const SSL_METHOD *method)
+wmkc::net::ssl_context::ssl_context(const SSL_METHOD *method)
 : ssl_ctx(), ssl()
 {
     // 如果用户未指定SSL版本
@@ -25,7 +25,7 @@ wmkcNet::wmkcSSL_Context::wmkcSSL_Context(const SSL_METHOD *method)
     }
 
     if(!(this->ssl_ctx = SSL_CTX_new(method))) {
-        wmkcSSL_exception("wmkcNet::wmkcSSL_Context::wmkcSSL_Context");
+        wmkcSSL_exception("wmkc::net::ssl_context::ssl_context");
     }
 
     // 指定SSL选项
@@ -55,28 +55,28 @@ wmkcNet::wmkcSSL_Context::wmkcSSL_Context(const SSL_METHOD *method)
     // 设置SSL协议模式
     SSL_CTX_set_mode(this->ssl_ctx, SSL_MODE_RELEASE_BUFFERS);
     // 设置SSL协议会话上下文ID
-    SSL_CTX_set_session_id_context(this->ssl_ctx, (wmkcByte *)"wmkcSSL_Context", 15);
+    SSL_CTX_set_session_id_context(this->ssl_ctx, (wmkcByte *)"ssl_context", 15);
 
     // 根据CTX新建一个SSL对象
     if(!(this->ssl = SSL_new(this->ssl_ctx))) {
         SSL_CTX_free(this->ssl_ctx);
-        wmkcSSL_exception("wmkcNet::wmkcSSL_Context::wmkcSSL_Context");
+        wmkcSSL_exception("wmkc::net::ssl_context::ssl_context");
     }
 }
 
-wmkcNet::wmkcSSL_Context::~wmkcSSL_Context()
+wmkc::net::ssl_context::~ssl_context()
 {
     SSL_free(this->ssl);
     SSL_CTX_free(this->ssl_ctx);
 }
 
-wmkcNet::wmkcSSL_Socket wmkcNet::wmkcSSL_Context::wrap_socket(wmkcNet::Socket fd, std::string server_hostname)
+wmkc::net::ssl_socket wmkc::net::ssl_context::wrap_socket(wmkc::net::Socket fd, std::string server_hostname)
 {
     if(SSL_set_fd(this->ssl, fd.fd) != 1) {
-        wmkcSSL_exception("wmkcNet::wmkcSSL_Context::wrap_socket");
+        wmkcSSL_exception("wmkc::net::ssl_context::wrap_socket");
     }
     if(SSL_set_tlsext_host_name(this->ssl, server_hostname.c_str()) != 1) {
-        wmkcSSL_exception("wmkcNet::wmkcSSL_Context::wrap_socket");
+        wmkcSSL_exception("wmkc::net::ssl_context::wrap_socket");
     }
-    return wmkcNet::wmkcSSL_Socket(this->ssl, fd);
+    return wmkc::net::ssl_socket(this->ssl, fd);
 }

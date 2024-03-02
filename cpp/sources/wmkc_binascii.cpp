@@ -18,28 +18,28 @@ static const wmkcByte hexTable[256] = {
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f};
 
-wmkcByte wmkcBinascii::toTop(wmkcByte c)
+wmkcByte wmkc::binascii::toTop(wmkcByte c)
 {
     return ((c >> 4) < 0xa) ? ((c >> 4) + 0x30) : ((c >> 4) + 0x57);
 }
 
-wmkcByte wmkcBinascii::toBot(wmkcByte c)
+wmkcByte wmkc::binascii::toBot(wmkcByte c)
 {
     return ((c & 0xf) < 0xa) ? ((c & 0xf) + 0x30) : ((c & 0xf) + 0x57);
 }
 
-std::string wmkcBinascii::b2a_hex(std::string content)
+std::string wmkc::binascii::b2a_hex(std::string content)
 {
     if(content.empty()) {
         return std::string();
     }
-    wmkcFast wmkcSize i;
+    wmkcSize i;
     wmkcByte *src = (wmkcByte *)content.c_str();
     wmkcSize srcSize = content.size();
 
     wmkcByte *dst = new wmkcByte[srcSize << 1];
     if(!dst) {
-        wmkcErr_exception(wmkcErr_ErrMemory, "wmkcBinascii::b2a_hex",
+        wmkc::exception(wmkcErr_ErrMemory, "wmkc::binascii::b2a_hex",
             "Failed to allocate memory for dst.");
     }
 
@@ -53,7 +53,7 @@ std::string wmkcBinascii::b2a_hex(std::string content)
     return result;
 }
 
-std::string wmkcBinascii::a2b_hex(std::string content)
+std::string wmkc::binascii::a2b_hex(std::string content)
 {
     if(content.empty()) {
         return std::string();
@@ -63,15 +63,15 @@ std::string wmkcBinascii::a2b_hex(std::string content)
 
     wmkcByte *src = (wmkcByte *)content.c_str();
     wmkcSize srcSize = content.size();
-    wmkcByte *dst = wmkcNull;
+    wmkcByte *dst = nullptr;
 
     if(srcSize & 1) {
-        wmkcErr_exception(wmkcErr_ErrType, "wmkcBinascii::a2b_hex",
+        wmkc::exception(wmkcErr_Err, "wmkc::binascii::a2b_hex",
             "Wrong type, should not be an odd length.");
     }
 
     if(!(dst = new wmkcByte[srcSize >> 1])) {
-        wmkcErr_exception(wmkcErr_ErrMemory, "wmkcBinascii::a2b_hex",
+        wmkc::exception(wmkcErr_ErrMemory, "wmkc::binascii::a2b_hex",
             "Failed to allocate memory for dst.");
     }
 
@@ -80,7 +80,7 @@ std::string wmkcBinascii::a2b_hex(std::string content)
         bot = hexTable[src[srcIndex + 1]];
         if((top == 0x1f) || (bot == 0x1f)) {
             delete[] dst;
-            wmkcErr_exception(wmkcErr_ErrType, "wmkcBinascii_a2b_hex",
+            wmkc::exception(wmkcErr_Err, "wmkc::binascii_a2b_hex",
                 "Wrong type, characters must be from 0 to f.");
         }
         dst[dstIndex] = (top << 4) + bot;

@@ -35,7 +35,7 @@
 (2) 快速掌握左移＜＜、右移＞＞位运算及使用技巧 - 知乎. https://zhuanlan.zhihu.com/p/390085789.
 (3) verilog移位操作符_百度文库. https://wenku.baidu.com/view/01915d7e51d380eb6294dd88d0d233d4b04e3f36.html.
 */
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_FEA
@@ -49,53 +49,52 @@
 
 #define WMKC_FEA_BLOCKLEN 16
 
-namespace wmkcCrypto {
-    enum class FEA_XcryptMode {
-        ECB, CBC, CTR, CFB
-    };
+namespace wmkc {
+    namespace crypto {
+        enum class xcryptMode {ECB, CBC, CTR, CFB};
+        class fea {
+            private:
+                wmkcVoid subBytes(wmkcByte *block);
+                wmkcVoid shiftBits(wmkcByte *block);
 
-    class wmkcFEA {
-        private:
-            wmkcVoid subBytes(wmkcByte *block);
-            wmkcVoid shiftBits(wmkcByte *block);
+                wmkcVoid invSubBytes(wmkcByte *block);
+                wmkcVoid invShiftBits(wmkcByte *block);
 
-            wmkcVoid invSubBytes(wmkcByte *block);
-            wmkcVoid invShiftBits(wmkcByte *block);
+                wmkcVoid shiftRows(wmkcByte *block);
+                wmkcVoid invShiftRows(wmkcByte *block);
 
-            wmkcVoid shiftRows(wmkcByte *block);
-            wmkcVoid invShiftRows(wmkcByte *block);
+                wmkcVoid xorWithIV(wmkcByte *block, wmkcByte *iv);
+                wmkcVoid keyExtension(wmkcByte *key, wmkcByte *iv);
 
-            wmkcVoid xorWithIV(wmkcByte *block, wmkcByte *iv);
-            wmkcVoid keyExtension(wmkcByte *key, wmkcByte *iv);
+                wmkcVoid cipher(wmkcByte *p, wmkcByte *roundKey);
+                wmkcVoid invCipher(wmkcByte *c, wmkcByte *roundKey);
 
-            wmkcVoid cipher(wmkcByte *p, wmkcByte *roundKey);
-            wmkcVoid invCipher(wmkcByte *c, wmkcByte *roundKey);
+            public:
+                wmkcByte key[WMKC_FEA_BLOCKLEN << 1];
+                wmkcByte iv[WMKC_FEA_BLOCKLEN];
+                wmkcByte nonce[WMKC_FEA_BLOCKLEN >> 1];
+                wmkcByte roundKey[sizeof(key) * WMKC_FEA_NR]; // len(key) * WMKC_FEA_NR
+                wmkc_u32 segmentSize;
 
-        public:
-            wmkcByte key[WMKC_FEA_BLOCKLEN << 1];
-            wmkcByte iv[WMKC_FEA_BLOCKLEN];
-            wmkcByte nonce[WMKC_FEA_BLOCKLEN >> 1];
-            wmkcByte roundKey[sizeof(key) * WMKC_FEA_NR]; // len(key) * WMKC_FEA_NR
-            wmkc_u32 segmentSize;
+                wmkcVoid ecb_encrypt(wmkcByte *p);
+                wmkcVoid ecb_decrypt(wmkcByte *c);
 
-            wmkcVoid ecb_encrypt(wmkcByte *p);
-            wmkcVoid ecb_decrypt(wmkcByte *c);
+                wmkcVoid cbc_encrypt(wmkcByte *p, wmkcSize n);
+                wmkcVoid cbc_decrypt(wmkcByte *c, wmkcSize n);
 
-            wmkcVoid cbc_encrypt(wmkcByte *p, wmkcSize n);
-            wmkcVoid cbc_decrypt(wmkcByte *c, wmkcSize n);
+                wmkcVoid ctr_xcrypt(wmkcByte *d, wmkcSize n);
 
-            wmkcVoid ctr_xcrypt(wmkcByte *d, wmkcSize n);
+                wmkcVoid cfb_encrypt(wmkcByte *p, wmkcSize n, wmkc_u32 segmentSize);
+                wmkcVoid cfb_decrypt(wmkcByte *c, wmkcSize n, wmkc_u32 segmentSize);
 
-            wmkcVoid cfb_encrypt(wmkcByte *p, wmkcSize n, wmkc_u32 segmentSize);
-            wmkcVoid cfb_decrypt(wmkcByte *c, wmkcSize n, wmkc_u32 segmentSize);
+                //////////////////////////////////////////////////////////////////
 
-            //////////////////////////////////////////////////////////////////
-
-            wmkcFEA(const wmkcByte *key, const wmkcByte *iv, const wmkc_u32 segmentSize = 128);
-            ~wmkcFEA();
-            void encrypt(wmkcByte *content, wmkcSize size, FEA_XcryptMode mode);
-            void decrypt(wmkcByte *content, wmkcSize size, FEA_XcryptMode mode);
-    };
+                fea(const wmkcByte *key, const wmkcByte *iv, const wmkc_u32 segmentSize = 128);
+                ~fea();
+                void encrypt(wmkcByte *content, wmkcSize size, xcryptMode mode);
+                void decrypt(wmkcByte *content, wmkcSize size, xcryptMode mode);
+        };
+    }
 }
 
 #endif

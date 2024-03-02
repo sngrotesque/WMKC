@@ -1,13 +1,13 @@
 #include <network/wmkc_net_exception.hpp>
 
-void wmkcNet::Socket_exception(std::string funcName)
+void wmkc::net::exception(std::string funcName)
 {
 #   if defined(WMKC_PLATFORM_WINOS)
     wmkc_s32 err = WSAGetLastError();
 #   elif defined(WMKC_PLATFORM_LINUX)
     wmkc_s32 err = errno;
 #   endif
-    const char *msg = wmkcNull;
+    const char *msg = nullptr;
 
     switch(err) {
         case WMKC_NET_ERR_EINTR:
@@ -152,7 +152,7 @@ void wmkcNet::Socket_exception(std::string funcName)
                     msg = "Other system error; errno is set to indicate the error."; break;
 #               endif
                 default:
-                    msg = "wmkcNet::Socket_exception: Unexpected error."; break;
+                    msg = "wmkc::net::exception: Unexpected error."; break;
             }
     }
     throw std::runtime_error(std::string(funcName) + "[" + std::to_string(err) + "]: " + msg);

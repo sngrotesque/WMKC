@@ -1,6 +1,6 @@
 #include <crypto/fea.hpp>
 
-wmkcVoid wmkcCrypto::wmkcFEA::cbc_encrypt(wmkcByte *p, wmkcSize n)
+wmkcVoid wmkc::crypto::fea::cbc_encrypt(wmkcByte *p, wmkcSize n)
 {
     wmkcByte roundIv[WMKC_FEA_BLOCKLEN];
 
@@ -12,7 +12,7 @@ wmkcVoid wmkcCrypto::wmkcFEA::cbc_encrypt(wmkcByte *p, wmkcSize n)
     }
 }
 
-wmkcVoid wmkcCrypto::wmkcFEA::cbc_decrypt(wmkcByte *c, wmkcSize n)
+wmkcVoid wmkc::crypto::fea::cbc_decrypt(wmkcByte *c, wmkcSize n)
 {
     wmkcByte roundIv[WMKC_FEA_BLOCKLEN];
     wmkcByte roundBuffer[WMKC_FEA_BLOCKLEN];

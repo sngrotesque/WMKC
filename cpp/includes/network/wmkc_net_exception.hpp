@@ -1,8 +1,9 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
 #ifndef WMKC_NET_EXCEPTION
 #define WMKC_NET_EXCEPTION
+#include <wmkc_exception.hpp>
 
 #if defined(WMKC_PLATFORM_LINUX)
 #include <errno.h>
@@ -256,8 +257,10 @@
 #define WMKC_NET_ERR_ECONNREFUSED        ECONNREFUSED
 #endif
 
-namespace wmkcNet {
-    void Socket_exception(std::string funcName);
+namespace wmkc {
+    namespace net {
+        void exception(std::string funcName);
+    }
 }
 
 #endif

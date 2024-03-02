@@ -1,62 +1,25 @@
-// #include <network/wmkc_net.hpp>
-// #include <network/wmkc_ssl.hpp>
-// #include <network/wmkc_dns.hpp>
+#include <iostream>
 
-// #include <crypto/snc.hpp>
+#include <network/wmkc_net.hpp>
 
-// #include <wmkc_binascii.hpp>
-// #include <wmkc_base64.hpp>
-
-// #include <wmkc_random.hpp>
-#include <wmkc_struct.hpp>
-
-// #include <wmkc_hash.hpp>
-#include <wmkc_misc.hpp>
-// #include <wmkc_time.hpp>
-
-#include <lzma.h>
-#include <lzmalib.h>
-
-using namespace std;
-
-void va_test(string format, ...)
+int main(int argc, char **argv)
 {
-    va_list va;
+#   ifdef WMKC_PLATFORM_WINOS
+    WSADATA ws;
+    WSAStartup(MAKEWORD(2,2), &ws);
+#   endif
 
-    va_start(va, format);
+    wmkc::net::Socket fd(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-    for(const auto &i : format) {
-        if(i == 'I') {
-            printf("32bit value: %d\n", va_arg(va, int));
-        } else if(i == 'H') {
-            printf("16bit value: %d\n", va_arg(va, int));
-        }
-    }
-}
+    fd.connect("www.baidu.com", 80);
+    fd.send("GET / HTTP/1.1\r\nHost: www.baidu.com\r\nUser-Agent: Android\r\n\r\n");
+    std::cout << fd.recv(4096) << std::endl;
 
-void struct_test()
-{
-    wmkcStruct Struct;
+    fd.shutdown(2);
+    fd.close();
 
-    string format = ">HHI";
-    vector<wmkcSize> args = {
-        0x1234, // ID
-        0x0134, // Length
-        0x00000003  // test
-    };
-
-    try {
-        string res = Struct.pack(format, args);
-        printf("Struct.orderSymbol: %d\n", Struct.orderSymbol);
-        wmkcMisc::PRINT_RAW((wmkcByte *)(res.c_str()), res.size(), true);
-    } catch(exception &e) {
-        cout << e.what() << endl;
-    }
-}
-
-int main()
-{
-    
-
+#   ifdef WMKC_PLATFORM_WINOS
+    WSACleanup();
+#   endif
     return 0;
 }

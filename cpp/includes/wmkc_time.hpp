@@ -1,4 +1,4 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_TIME
@@ -14,12 +14,14 @@
 #include <unistd.h>
 #endif
 
-class wmkcTime {
-    public:
-        std::string getNowTime(std::string timeFormat = "%Y-%m-%d %H:%M:%S");
-        wmkcVoid sleep(double _t);
-        double time();
-};
+namespace wmkc {
+    class Time {
+        public:
+            std::string getNowTime(std::string timeFormat = "%Y-%m-%d %H:%M:%S");
+            wmkcVoid sleep(double _t);
+            double time();
+    };
+}
 
 #endif /* WMKC_TIME */
 #endif /* WMKC_SUPPORT */

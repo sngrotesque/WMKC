@@ -1,16 +1,16 @@
 #include <network/wmkc_packet.hpp>
 
-wmkcNet::wmkcPacket::wmkcPacket(wmkcNet::Socket current_fd)
+wmkc::net::packet::packet(wmkc::net::Socket current_fd)
 : fd(current_fd), seq(), length(), crc(), data(), digest()
 {
     memcpy(this->end, WMKC_PACKET_END, WMKC_PACKET_END_LEN);
 }
 
-wmkcVoid wmkcNet::wmkcPacket::send(std::string content)
+wmkcVoid wmkc::net::packet::send(std::string content)
 {
     std::string packet;
-    wmkcStruct _struct;
-    wmkcByte *p = wmkcNull;
+    wmkc::structure _struct;
+    wmkcByte *p = nullptr;
     // begin
     // 1. get seq, and seq -> BBBB, (2333 -> 00 00 09 1d)
     packet.append(_struct.pack("!I", {this->seq}));
@@ -42,7 +42,7 @@ wmkcVoid wmkcNet::wmkcPacket::send(std::string content)
     this->seq++;
 }
 
-std::string wmkcNet::wmkcPacket::recv()
+std::string wmkc::net::packet::recv()
 {
     
 }

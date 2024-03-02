@@ -1,6 +1,6 @@
 #include <wmkc_misc.hpp>
 
-wmkcVoid wmkcMisc::PRINT(const wmkcByte *data, wmkcSize len, wmkcSize num, wmkcBool newline, wmkcBool tableChar)
+wmkcVoid wmkc::misc::PRINT(const wmkcByte *data, wmkcSize len, wmkcSize num, wmkcBool newline, wmkcBool tableChar)
 {
     for(wmkcSize x = 0; x < len; ++x) {
         if(tableChar && ((x) % num == 0)) {
@@ -24,7 +24,7 @@ wmkcVoid wmkcMisc::PRINT(const wmkcByte *data, wmkcSize len, wmkcSize num, wmkcB
     if(newline) printf("\n");
 }
 
-wmkcVoid wmkcMisc::PRINT_N(const wmkcByte *arr, wmkcSize size, wmkcBool newline)
+wmkcVoid wmkc::misc::PRINT_N(const wmkcByte *arr, wmkcSize size, wmkcBool newline)
 {
     for(wmkcSize x = 0; x < size; ++x) {
         printf("%3d", x[arr]);
@@ -37,7 +37,7 @@ wmkcVoid wmkcMisc::PRINT_N(const wmkcByte *arr, wmkcSize size, wmkcBool newline)
     if(newline) printf("\n");
 }
 
-wmkcVoid wmkcMisc::PRINT_BOX(const wmkcByte *box, wmkcSize size, wmkcSize num, wmkcBool newline)
+wmkcVoid wmkc::misc::PRINT_BOX(const wmkcByte *box, wmkcSize size, wmkcSize num, wmkcBool newline)
 {
     for(wmkcSize x = 0; x < size; ++x) {
         printf("0x%02x", box[x]);
@@ -55,7 +55,7 @@ wmkcVoid wmkcMisc::PRINT_BOX(const wmkcByte *box, wmkcSize size, wmkcSize num, w
         printf("\n");
 }
 
-wmkcVoid wmkcMisc::PRINT_RAW(const wmkcByte *buf, wmkcSize size, wmkcBool newline)
+wmkcVoid wmkc::misc::PRINT_RAW(const wmkcByte *buf, wmkcSize size, wmkcBool newline)
 {
     for(wmkcSize x = 0; x < size; ++x) {
         if(buf[x] >= 0x20 && buf[x] < 0x7f) {

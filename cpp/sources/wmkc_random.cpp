@@ -1,17 +1,22 @@
 #include <wmkc_random.hpp>
 
-wmkcRandom::wmkcRandom()
+constexpr wmkcByte BIT_BYTE_SWAP(wmkcByte x)
+{
+    return ((x & 0xf) << 4) ^ (x >> 4);
+}
+
+wmkc::random::random()
 {
     this->seed();
 }
 
-wmkcVoid wmkcRandom::seed()
+wmkcVoid wmkc::random::seed()
 {
-    wmkcTime timer;
+    wmkc::Time timer;
     srand((unsigned)(timer.time() * 1.e6));
 }
 
-wmkcSize wmkcRandom::rand()
+wmkcSize wmkc::random::rand()
 {
     wmkcSize n = 0, num[32];
     wmkc_u32 x, count;
@@ -19,58 +24,58 @@ wmkcSize wmkcRandom::rand()
         num[x] = ::rand() ^ (::rand() ^ (::rand() & ::rand()));
         n = n + (n ^ num[x]);
     }
-    n = n + wmkcBasic_byteSwap(::rand() & 0x0f);
+    n = n + BIT_BYTE_SWAP(::rand() & 0x0f);
     for(count = 0; count < 32; ++count) {
         for(x = 0; x < 32; ++x) {
             num[x] = ::rand() ^ (::rand() ^ (::rand() & ::rand()));
         }
         n = (n + (n ^ num[count])) ^ count;
-        n = (n + ::rand()) ^ wmkcBasic_byteSwap((count + (::rand() ^ (n - num[count]))) & 0xff);
+        n = (n + ::rand()) ^ BIT_BYTE_SWAP((count + (::rand() ^ (n - num[count]))) & 0xff);
     }
     return n;
 }
 
-wmkcSize wmkcRandom::randint(wmkcSize min, wmkcSize max)
+wmkcSize wmkc::random::randint(wmkcSize min, wmkcSize max)
 {
     return this->rand() % (max - min + 1) + min;
 }
 
-wmkcVoid wmkcRandom::urandom(wmkcByte *buf, wmkcSize size)
+wmkcVoid wmkc::random::urandom(wmkcByte *buf, wmkcSize size)
 {
     if(!buf || !size) {
-        wmkcErr_exception(wmkcErr_ErrNULL, "wmkcRandom::urandom", "buf or size is NULL.");
+        wmkc::exception(wmkcErr_ErrNULL, "wmkc::random::urandom", "buf or size is NULL.");
     }
 
 #   if defined(WMKC_PLATFORM_WINOS)
     HCRYPTPROV hProv;
     if(!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, 0)) {
-        wmkcErr_exception(wmkcErr_ErrSysFunc, "wmkcRandom::urandom",
+        wmkc::exception(wmkcErr_ErrSysFunc, "wmkc::random::urandom",
             "CryptAcquireContext function returned an error code when called.");
     }
     if(!CryptGenRandom(hProv, size, buf)) {
-        wmkcErr_exception(wmkcErr_ErrSysFunc, "wmkcRandom::urandom",
+        wmkc::exception(wmkcErr_ErrSysFunc, "wmkc::random::urandom",
             "CryptGenRandom function returned an error code when called.");
     }
     if(!CryptReleaseContext(hProv, 0)) {
-        wmkcErr_exception(wmkcErr_ErrSysFunc, "wmkcRandom::urandom",
+        wmkc::exception(wmkcErr_ErrSysFunc, "wmkc::random::urandom",
             "CryptReleaseContext function returned an error code when called.");
     }
 #   elif defined(WMKC_PLATFORM_LINUX)
     if(getrandom(buf, size, GRND_RANDOM) == wmkcErr_Err32) {
-        wmkcErr_exception(wmkcErr_ErrSysFunc, "wmkcRandom::urandom",
+        wmkc::exception(wmkcErr_ErrSysFunc, "wmkc::random::urandom",
             "getrandom function returned an error code when called.");
     }
 #   endif
 }
 
-std::string wmkcRandom::urandom(wmkc_u32 size)
+std::string wmkc::random::urandom(wmkc_u32 size)
 {
     if(!size) {
         return std::string();
     }
     wmkcByte *buf = new wmkcByte[size];
     if(!buf) {
-        wmkcErr_exception(wmkcErr_ErrMemory, "wmkcRandom::urandom",
+        wmkc::exception(wmkcErr_ErrMemory, "wmkc::random::urandom",
             "Failed to allocate memory for buf.");
     }
 

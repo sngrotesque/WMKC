@@ -1,4 +1,6 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
+
+// 后续看看情况是否将这些字符串改为std::string
 
 #if WMKC_SUPPORT
 #ifndef WMKC_COLOR

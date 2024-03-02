@@ -1,6 +1,6 @@
 #include <crypto/fea.hpp>
 
-wmkcVoid wmkcCrypto::wmkcFEA::ctr_xcrypt(wmkcByte *d, wmkcSize n)
+wmkcVoid wmkc::crypto::fea::ctr_xcrypt(wmkcByte *d, wmkcSize n)
 {
     
 }

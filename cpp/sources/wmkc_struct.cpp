@@ -17,7 +17,7 @@ static const wmkcByte formatSymbol[] = {
     'd'  // double
 };
 
-wmkcVoid wmkcStruct::verifySymbol(const std::string format, const wmkcSize args_length)
+wmkcVoid wmkc::structure::verifySymbol(const std::string format, const wmkcSize args_length)
 {
     const wmkcByte *bo_bp = byteOrder;
     const wmkcByte *bo_ep = byteOrder + sizeof(byteOrder);
@@ -30,25 +30,25 @@ wmkcVoid wmkcStruct::verifySymbol(const std::string format, const wmkcSize args_
     this->orderSymbol = (std::find(bo_bp, bo_ep, format[0]) != bo_ep)?(format[0]):(0x00);
     // 检测给出的格式符数量是否等于给出的参数数量
     if((expected_length = (this->orderSymbol)?(format.size() - 1):(format.size())) != args_length) {
-        wmkcErr_exception(wmkcErr_Err32, "wmkcStruct::verifySymbol", std::string("pack expected " + \
+        wmkc::exception(wmkcErr_Err, "wmkc::structure::verifySymbol", std::string("pack expected " + \
             std::to_string(expected_length) + " items for packing (got " + std::to_string(args_length) + ")."));
     }
 
     // 检查所有格式符是否合法
     for(const auto &i : format) {
         if(!(fy_ok = (std::find(fy_bp, fy_ep, i) != fy_ep)) && !(bo_ok = (std::find(bo_bp, bo_ep, i) != bo_ep))) {
-            wmkcErr_exception(wmkcErr_Err32, "wmkcStruct::verifySymbol", "bad char in struct format");
+            wmkc::exception(wmkcErr_Err, "wmkc::structure::verifySymbol", "bad char in struct format");
         }
     }
 }
 
-wmkcStruct::wmkcStruct()
+wmkc::structure::structure()
 : orderSymbol(), swapEndian(), bit16(), bit32(), bit64()
 {
 
 }
 
-std::string wmkcStruct::pack(std::string format, std::vector<wmkcSize> args)
+std::string wmkc::structure::pack(std::string format, std::vector<wmkcSize> args)
 {
     if(format.empty()) {
         return std::string();
@@ -72,12 +72,12 @@ std::string wmkcStruct::pack(std::string format, std::vector<wmkcSize> args)
     // 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊不想写了好累啊
     ///////////////////////////////////////////////////
 
-    std::cout << "everything ok." << std::endl;
+    // std::cout << "everything ok." << std::endl;
 
     return result;
 }
 
-std::vector<wmkcSize> wmkcStruct::unpack(std::string format, std::string args)
+std::vector<wmkcSize> wmkc::structure::unpack(std::string format, std::string args)
 {
     std::vector<wmkcSize> result;
 

@@ -1,10 +1,9 @@
-#include <wmkc_conf.hpp>
+#include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_NET
 #define WMKC_CPP_NET
 #include <network/wmkc_net_exception.hpp>
-#include <wmkc_exception.hpp>
 #include <cmath>
 
 #if defined(WMKC_PLATFORM_LINUX)
@@ -35,52 +34,54 @@ typedef wmkcChar       wmkcNetBufT;  // wmkcNet的缓冲区类型
 
 #include <wmkc_memory.hpp>
 
-namespace wmkcNet {
-    // wmkcNet的IP端点
-    class IPEndPoint {
-        public:
-            std::string addr;
-            wmkc_u16 port;
-            IPEndPoint(std::string addr, wmkc_u16 port): addr(addr), port(port) {}
-            IPEndPoint() {};
+namespace wmkc {
+    namespace net {
+        // wmkcNet的IP端点
+        class IPEndPoint {
+            public:
+                std::string addr;
+                wmkc_u16 port;
+                IPEndPoint(std::string addr, wmkc_u16 port): addr(addr), port(port) {}
+                IPEndPoint() {};
+        };
+
+        ADDRINFO *getAddrInfo(wmkc_s32 family, wmkc_s32 type, wmkc_s32 proto, std::string addr, std::string serviceName);
+
+        std::string networkAddr2stringAddr(wmkc_s32 family, const wmkcVoid *pAddr);
+        uint16_t networkPort2numberPort(const wmkc_u16 port);
+        IPEndPoint getNetworkInfo(wmkcNetSockT sockfd, wmkc_s32 family);
+        IPEndPoint getNetworkInfo(wmkc_s32 family, SOCKADDR *pAddr);
+
+        class Socket {
+            public:
+                double timeout; // 超时时间
+                wmkcNetSockT fd; // 套接字文件描述符
+                wmkc_s32 family; // 套接字网络家族
+                wmkc_s32 type;   // 套接字类型
+                wmkc_s32 proto;  // 套接字协议
+                wmkc_s32 transmissionLength; // 单次传输长度
+
+                IPEndPoint lAddr; // 套接字绑定的本地IP端点
+                IPEndPoint rAddr; // 套接字绑定的远程IP端点
+
+                Socket(wmkc_s32 _family, wmkc_s32 _type, wmkc_s32 _proto, wmkcNetSockT _fd = EOF);
+                ~Socket();
+
+                void settimeout(double _time);
+                void connect(const std::string addr, const wmkc_u16 port);
+                void bind(const std::string addr, const wmkc_u16 port);
+                void listen(const wmkc_s32 backlog);
+                Socket accept();
+                void send(const std::string content, const wmkc_s32 flag = 0);
+                void sendall(const std::string content, const wmkc_s32 flag = 0);
+                void sendto(const std::string content, IPEndPoint target, const wmkc_s32 flag = 0);
+                std::string recv(const wmkc_s32 len, const wmkc_s32 flag = 0);
+                std::string recvfrom(const wmkc_s32 len, SOCKADDR *from = nullptr, socklen_t *fromlen = nullptr, const wmkc_s32 flag = 0);
+                void shutdown(const wmkc_s32 how);
+                void close();
+        };
     };
-
-    ADDRINFO *getAddrInfo(wmkc_s32 family, wmkc_s32 type, wmkc_s32 proto, std::string addr, std::string serviceName);
-
-    std::string networkAddr2stringAddr(wmkc_s32 family, const wmkcVoid *pAddr);
-    uint16_t networkPort2numberPort(const wmkc_u16 port);
-    IPEndPoint getNetworkInfo(wmkcNetSockT sockfd, wmkc_s32 family);
-    IPEndPoint getNetworkInfo(wmkc_s32 family, SOCKADDR *pAddr);
-
-    class Socket {
-        public:
-            double timeout; // 超时时间
-            wmkcNetSockT fd; // 套接字文件描述符
-            wmkc_s32 family; // 套接字网络家族
-            wmkc_s32 type;   // 套接字类型
-            wmkc_s32 proto;  // 套接字协议
-            wmkc_s32 transmissionLength; // 单次传输长度
-
-            wmkcNet::IPEndPoint lAddr; // 套接字绑定的本地IP端点
-            wmkcNet::IPEndPoint rAddr; // 套接字绑定的远程IP端点
-
-            Socket(wmkc_s32 _family, wmkc_s32 _type, wmkc_s32 _proto, wmkcNetSockT _fd = EOF);
-            ~Socket();
-
-            void settimeout(double _time);
-            void connect(const std::string addr, const wmkc_u16 port);
-            void bind(const std::string addr, const wmkc_u16 port);
-            void listen(const wmkc_s32 backlog);
-            wmkcNet::Socket accept();
-            void send(const std::string content, const wmkc_s32 flag = 0);
-            void sendall(const std::string content, const wmkc_s32 flag = 0);
-            void sendto(const std::string content, wmkcNet::IPEndPoint target, const wmkc_s32 flag = 0);
-            std::string recv(const wmkc_s32 len, const wmkc_s32 flag = 0);
-            std::string recvfrom(const wmkc_s32 len, SOCKADDR *from = wmkcNull, socklen_t *fromlen = wmkcNull, const wmkc_s32 flag = 0);
-            void shutdown(const wmkc_s32 how);
-            void close();
-    };
-};
+}
 
 #endif /* WMKC_CPP_NET */
 #endif /* WMKC_SUPPORT */
