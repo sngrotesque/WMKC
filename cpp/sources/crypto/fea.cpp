@@ -50,33 +50,57 @@ static const wmkcByte rsbox[256] = {
 
 wmkcVoid wmkc::crypto::fea::subBytes(wmkcByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 2) {
-        *(block + i) = WMKC_FEA_SBOX(*(block + i));
+    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+        *(block + i)     = WMKC_FEA_SBOX(*(block + i));
         *(block + i + 1) = WMKC_FEA_SBOX(*(block + i + 1));
+        *(block + i + 2) = WMKC_FEA_SBOX(*(block + i + 2));
+        *(block + i + 3) = WMKC_FEA_SBOX(*(block + i + 3));
+        *(block + i + 4) = WMKC_FEA_SBOX(*(block + i + 4));
+        *(block + i + 5) = WMKC_FEA_SBOX(*(block + i + 5));
+        *(block + i + 6) = WMKC_FEA_SBOX(*(block + i + 6));
+        *(block + i + 7) = WMKC_FEA_SBOX(*(block + i + 7));
     }
 }
 
 wmkcVoid wmkc::crypto::fea::invSubBytes(wmkcByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 2) {
-        *(block + i) = WMKC_FEA_RSBOX(*(block + i));
+    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+        *(block + i)     = WMKC_FEA_RSBOX(*(block + i));
         *(block + i + 1) = WMKC_FEA_RSBOX(*(block + i + 1));
+        *(block + i + 2) = WMKC_FEA_RSBOX(*(block + i + 2));
+        *(block + i + 3) = WMKC_FEA_RSBOX(*(block + i + 3));
+        *(block + i + 4) = WMKC_FEA_RSBOX(*(block + i + 4));
+        *(block + i + 5) = WMKC_FEA_RSBOX(*(block + i + 5));
+        *(block + i + 6) = WMKC_FEA_RSBOX(*(block + i + 6));
+        *(block + i + 7) = WMKC_FEA_RSBOX(*(block + i + 7));
     }
 }
 
 wmkcVoid wmkc::crypto::fea::shiftBits(wmkcByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 2) {
-        *(block + i) = WMKC_FEA_SHIFT_BITS_L(*(block + i));
+    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+        *(block + i)     = WMKC_FEA_SHIFT_BITS_L(*(block + i));
         *(block + i + 1) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 1));
+        *(block + i + 2) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 2));
+        *(block + i + 3) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 3));
+        *(block + i + 4) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 4));
+        *(block + i + 5) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 5));
+        *(block + i + 6) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 6));
+        *(block + i + 7) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 7));
     }
 }
 
 wmkcVoid wmkc::crypto::fea::invShiftBits(wmkcByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 2) {
-        *(block + i) = WMKC_FEA_SHIFT_BITS_R(*(block + i));
+    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+        *(block + i)     = WMKC_FEA_SHIFT_BITS_R(*(block + i));
         *(block + i + 1) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 1));
+        *(block + i + 2) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 2));
+        *(block + i + 3) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 3));
+        *(block + i + 4) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 4));
+        *(block + i + 5) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 5));
+        *(block + i + 6) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 6));
+        *(block + i + 7) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 7));
     }
 }
 
@@ -91,14 +115,14 @@ wmkcVoid wmkc::crypto::fea::shiftRows(wmkcByte *block)
     swap = (*(block + 8) ^ *(block + 9) ^ *(block + 10) ^ *(block + 11) ^
         *(block + 12) ^ *(block + 13) ^ *(block + 14) ^ *(block + 15));
 
-    block[0] ^= swap;
-    block[1] ^= swap;
-    block[2] ^= swap;
-    block[3] ^= swap;
-    block[4] ^= swap;
-    block[5] ^= swap;
-    block[6] ^= swap;
-    block[7] ^= swap;
+    *(block + 0) ^= swap;
+    *(block + 1) ^= swap;
+    *(block + 2) ^= swap;
+    *(block + 3) ^= swap;
+    *(block + 4) ^= swap;
+    *(block + 5) ^= swap;
+    *(block + 6) ^= swap;
+    *(block + 7) ^= swap;
 }
 
 wmkcVoid wmkc::crypto::fea::invShiftRows(wmkcByte *block)
@@ -108,14 +132,14 @@ wmkcVoid wmkc::crypto::fea::invShiftRows(wmkcByte *block)
     swap = (*(block + 8) ^ *(block + 9) ^ *(block + 10) ^ *(block + 11) ^
         *(block + 12) ^ *(block + 13) ^ *(block + 14) ^ *(block + 15));
 
-    block[0] ^= swap;
-    block[1] ^= swap;
-    block[2] ^= swap;
-    block[3] ^= swap;
-    block[4] ^= swap;
-    block[5] ^= swap;
-    block[6] ^= swap;
-    block[7] ^= swap;
+    *(block + 0) ^= swap;
+    *(block + 1) ^= swap;
+    *(block + 2) ^= swap;
+    *(block + 3) ^= swap;
+    *(block + 4) ^= swap;
+    *(block + 5) ^= swap;
+    *(block + 6) ^= swap;
+    *(block + 7) ^= swap;
 
     memcpy(swap_array, block, 8);
     memcpy(block, block + 8, 8);
@@ -124,9 +148,15 @@ wmkcVoid wmkc::crypto::fea::invShiftRows(wmkcByte *block)
 
 wmkcVoid wmkc::crypto::fea::xorWithIV(wmkcByte *block, wmkcByte *iv)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 2) {
-        *(block + i) ^= *(iv + i);
+    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+        *(block + i)     ^= *(iv + i);
         *(block + i + 1) ^= *(iv + i + 1);
+        *(block + i + 2) ^= *(iv + i + 2);
+        *(block + i + 3) ^= *(iv + i + 3);
+        *(block + i + 4) ^= *(iv + i + 4);
+        *(block + i + 5) ^= *(iv + i + 5);
+        *(block + i + 6) ^= *(iv + i + 6);
+        *(block + i + 7) ^= *(iv + i + 7);
     }
 }
 
@@ -191,8 +221,15 @@ wmkcVoid wmkc::crypto::fea::cipher(wmkcByte *p, wmkcByte *roundKey)
     for(r = 0; r < WMKC_FEA_NR; ++r) {
         this->subBytes(p);
         subkey = roundKey + (r << 5); // roundKey + r * 32
-        for(i = 0; i < WMKC_FEA_BLOCKLEN; ++i) {
-            *(p + i) ^= *(subkey + (i & 31)); // subKey[i % 32]
+        for(i = 0; i < (WMKC_FEA_BLOCKLEN << 1); i += 8) {
+            *(p + (i       & 15)) ^= *(subkey + i);
+            *(p + ((i + 1) & 15)) ^= *(subkey + i + 1);
+            *(p + ((i + 2) & 15)) ^= *(subkey + i + 2);
+            *(p + ((i + 3) & 15)) ^= *(subkey + i + 3);
+            *(p + ((i + 4) & 15)) ^= *(subkey + i + 4);
+            *(p + ((i + 5) & 15)) ^= *(subkey + i + 5);
+            *(p + ((i + 6) & 15)) ^= *(subkey + i + 6);
+            *(p + ((i + 7) & 15)) ^= *(subkey + i + 7);
         }
         this->shiftRows(p);
         this->shiftBits(p);
@@ -207,8 +244,15 @@ wmkcVoid wmkc::crypto::fea::invCipher(wmkcByte *c, wmkcByte *roundKey)
         this->invShiftBits(c);
         this->invShiftRows(c);
         subkey = roundKey + ((WMKC_FEA_NR - r - 1) << 5); // roundKey + r * 32
-        for(i = 0; i < WMKC_FEA_BLOCKLEN; ++i) {
-            *(c + i) ^= *(subkey + (i & 31)); // subKey[i % 32]
+        for(i = 0; i < (WMKC_FEA_BLOCKLEN << 1); i += 8) {
+            *(c + (i       & 15)) ^= *(subkey + i);
+            *(c + ((i + 1) & 15)) ^= *(subkey + (i + 1));
+            *(c + ((i + 2) & 15)) ^= *(subkey + (i + 2));
+            *(c + ((i + 3) & 15)) ^= *(subkey + (i + 3));
+            *(c + ((i + 4) & 15)) ^= *(subkey + (i + 4));
+            *(c + ((i + 5) & 15)) ^= *(subkey + (i + 5));
+            *(c + ((i + 6) & 15)) ^= *(subkey + (i + 6));
+            *(c + ((i + 7) & 15)) ^= *(subkey + (i + 7));
         }
         this->invSubBytes(c);
     }
