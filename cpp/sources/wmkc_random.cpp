@@ -61,7 +61,7 @@ wmkcVoid wmkc::random::urandom(wmkcByte *buf, wmkcSize size)
             "CryptReleaseContext function returned an error code when called.");
     }
 #   elif defined(WMKC_PLATFORM_LINUX)
-    if(getrandom(buf, size, GRND_RANDOM) == wmkcErr_Err32) {
+    if(getrandom(buf, size, GRND_RANDOM) == wmkcErr_Err) {
         wmkc::exception(wmkcErr_ErrSysFunc, "wmkc::random::urandom",
             "getrandom function returned an error code when called.");
     }
