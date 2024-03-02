@@ -2,7 +2,9 @@
 
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_CRYPTO
-#include <wmkc_random.hpp>
+#include <vector>
+#include <algorithm>
+#include <random>
 
 namespace wmkc {
     namespace crypto {

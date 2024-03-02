@@ -129,24 +129,26 @@ def main():
     cmp.add_parameter('cpp/sources/wmkc_memory.cpp')
     cmp.add_parameter('cpp/sources/wmkc_misc.cpp')
 
-    cmp.add_parameter('cpp/sources/network/wmkc_net_exception.cpp')
-    cmp.add_parameter('cpp/sources/network/wmkc_ssl.cpp')
-    cmp.add_parameter('cpp/sources/network/wmkc_net.cpp')
-    cmp.add_parameter('cpp/sources/network/wmkc_dns.cpp')
+    # cmp.add_parameter('cpp/sources/network/wmkc_net_exception.cpp')
+    # cmp.add_parameter('cpp/sources/network/wmkc_ssl.cpp')
+    # cmp.add_parameter('cpp/sources/network/wmkc_net.cpp')
+    # cmp.add_parameter('cpp/sources/network/wmkc_dns.cpp')
 
-    cmp.add_parameter('cpp/sources/crypto/crypto.cpp')
-    cmp.add_parameter('cpp/sources/crypto/snc.cpp')
+    # Crypto
+    # cmp.add_parameter('cpp/sources/crypto/crypto.cpp')
+    # cmp.add_parameter('cpp/sources/crypto/snc.cpp')
 
-    # FEA Crypto
     cmp.add_parameter('cpp/sources/crypto/fea.cpp')
     cmp.add_parameter('cpp/sources/crypto/fea_cbc.cpp')
     cmp.add_parameter('cpp/sources/crypto/fea_ecb.cpp')
+    cmp.add_parameter('cpp/sources/crypto/fea_cfb.cpp')
+    cmp.add_parameter('cpp/sources/crypto/fea_ctr.cpp')
 
-    cmp.add_parameter('cpp/sources/wmkc_base64.cpp')
-    cmp.add_parameter('cpp/sources/wmkc_random.cpp')
-    cmp.add_parameter('cpp/sources/wmkc_struct.cpp')
+    # cmp.add_parameter('cpp/sources/wmkc_base64.cpp')
+    # cmp.add_parameter('cpp/sources/wmkc_random.cpp')
+    # cmp.add_parameter('cpp/sources/wmkc_struct.cpp')
     cmp.add_parameter('cpp/sources/wmkc_time.cpp')
-    cmp.add_parameter('cpp/sources/wmkc_pad.cpp')
+    # cmp.add_parameter('cpp/sources/wmkc_pad.cpp')
 
     start = time.time()
     cmp.build()

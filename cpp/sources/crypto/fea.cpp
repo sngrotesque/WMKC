@@ -238,13 +238,28 @@ void wmkc::crypto::fea::encrypt(wmkcByte *content, wmkcSize size, xcryptMode mod
 {
     switch(mode) {
         case xcryptMode::ECB:
-            this->cipher(content, this->roundKey);
+            this->cipher(content, this->roundKey); break;
+        case xcryptMode::CBC:
+            this->cbc_encrypt(content, size); break;
+        case xcryptMode::CTR:
+            this->ctr_xcrypt(content, size); break;
+        case xcryptMode::CFB:
+            this->cfb_encrypt(content, size, this->segmentSize); break;
     }
 }
 
 void wmkc::crypto::fea::decrypt(wmkcByte *content, wmkcSize size, xcryptMode mode)
 {
-
+    switch(mode) {
+        case xcryptMode::ECB:
+            this->invCipher(content, this->roundKey); break;
+        case xcryptMode::CBC:
+            this->cbc_decrypt(content, size); break;
+        case xcryptMode::CTR:
+            this->ctr_xcrypt(content, size); break;
+        case xcryptMode::CFB:
+            this->cfb_decrypt(content, size, this->segmentSize); break;
+    }
 }
 
 

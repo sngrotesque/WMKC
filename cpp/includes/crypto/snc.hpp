@@ -16,12 +16,8 @@ static const wmkcByte SNC_KN[3] = {32, 64, 96};
 namespace wmkc {
     namespace crypto {
         typedef wmkcByte state_t[SNC_NB][SNC_NK];
-        typedef enum {
-            SNC_256, SNC_512, SNC_768
-        } snc_keyMode;
-        typedef enum {
-            ECB, CBC, CTR, CFB
-        } snc_xcryptMode;
+        enum class snc_keyMode {SNC_256, SNC_512, SNC_768};
+        enum class snc_xcryptMode {ECB, CBC, CTR, CFB};
 
         class snc {
             private:

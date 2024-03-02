@@ -9,7 +9,7 @@
 
 namespace wmkc {
     namespace net {
-        std::string wmkcDNS(std::string hostname, std::string dnsServer);
+        std::string dns(std::string hostname, std::string dnsServer);
     }
 }
 
