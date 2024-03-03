@@ -1,11 +1,11 @@
 #include <wmkc_memory.hpp>
 
-wmkcVoid wmkc::memory_zero(wmkcVoid *p, wmkcSize n)
+wVoid wmkc::memory_zero(wVoid *p, wSize n)
 {
     memset(p, 0x00, n);
 }
 
-wmkcVoid wmkc::memory_secure(wmkcVoid *p, wmkcSize n)
+wVoid wmkc::memory_secure(wVoid *p, wSize n)
 {
 #   if defined(WMKC_PLATFORM_WINOS)
     SecureZeroMemory(p, n);

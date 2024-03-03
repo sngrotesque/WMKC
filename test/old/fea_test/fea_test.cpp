@@ -13,26 +13,26 @@ using namespace wmkcCrypto;
 using namespace wmkcMisc;
 using namespace std;
 
-static const wmkcByte key[32] = {
+static const wByte key[32] = {
     0xb0, 0xba, 0x8f, 0xe4, 0xc4, 0x7c, 0xc3, 0x7d, 0xac, 0x18, 0x29, 0x15, 0xd8, 0xab, 0xcd, 0xa7,
     0x9f, 0x97, 0x65, 0xc4, 0x98, 0x96, 0xf0, 0x40, 0x9c, 0x5e, 0x5e, 0x43, 0xbc, 0xee, 0x2f, 0x90
 };
-static const wmkcByte iv[16] = {
+static const wByte iv[16] = {
     0x61, 0x90, 0xa9, 0x28, 0xa4, 0x11, 0x1c, 0x0b, 0x22, 0xf8, 0x66, 0xcd, 0xfc, 0x2b, 0xcd, 0xc1
 };
 
 void fea_test()
 {
     wmkcFEA fea(key, iv);
-    wmkcChar text[2048] = {
+    wChar text[2048] = {
         "GET / HTTP/1.1\r\n"
         "Host: passport.bilibili.com\r\n"
         "Acceot: */*\r\n"
         "Accept-Type: text/html\r\n"
         "User-Agent: Android\r\n"
         "\r\n"};
-    wmkcByte *buffer = (wmkcByte *)text;
-    wmkcSize bufferSize = strlen(text);
+    wByte *buffer = (wByte *)text;
+    wSize bufferSize = strlen(text);
 
     wmkcPad::pad(buffer, &bufferSize, WMKC_FEA_BLOCKLEN, false);
     cout << "Plaintext:\n"; PRINT(buffer, bufferSize, 16, (bufferSize % 16), 1);
@@ -50,8 +50,8 @@ void fea_test()
 void fea_speed_test()
 {
     wmkcFEA fea(key, iv);
-    wmkcSize length = 16777216;
-    wmkcByte *buffer = new wmkcByte[length];
+    wSize length = 16777216;
+    wByte *buffer = new wByte[length];
 
     wmkcTime time;
 

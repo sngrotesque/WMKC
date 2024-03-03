@@ -1,11 +1,11 @@
 #include <crypto/fea.hpp>
 
-wmkcVoid wmkc::crypto::fea::ecb_encrypt(wmkcByte *p)
+wVoid wmkc::crypto::fea::ecb_encrypt(wByte *p)
 {
     this->cipher(p, this->roundKey);
 }
 
-wmkcVoid wmkc::crypto::fea::ecb_decrypt(wmkcByte *c)
+wVoid wmkc::crypto::fea::ecb_decrypt(wByte *c)
 {
     this->invCipher(c, this->roundKey);
 }

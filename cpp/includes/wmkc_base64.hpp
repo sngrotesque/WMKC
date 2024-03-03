@@ -11,8 +11,8 @@
 namespace wmkc {
     class base64 {
         private:
-            wmkcSize encode_size(wmkcSize size);
-            wmkcSize decode_size(std::string content);
+            wSize encode_size(wSize size);
+            wSize decode_size(std::string content);
         public:
             std::string encode(std::string content);
             std::string decode(std::string content);

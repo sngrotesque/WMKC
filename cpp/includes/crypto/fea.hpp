@@ -54,45 +54,45 @@ namespace wmkc {
         enum class xcryptMode {ECB, CBC, CTR, CFB};
         class fea {
             private:
-                wmkcVoid subBytes(wmkcByte *block);
-                wmkcVoid shiftBits(wmkcByte *block);
+                wVoid subBytes(wByte *block);
+                wVoid shiftBits(wByte *block);
 
-                wmkcVoid invSubBytes(wmkcByte *block);
-                wmkcVoid invShiftBits(wmkcByte *block);
+                wVoid invSubBytes(wByte *block);
+                wVoid invShiftBits(wByte *block);
 
-                wmkcVoid shiftRows(wmkcByte *block);
-                wmkcVoid invShiftRows(wmkcByte *block);
+                wVoid shiftRows(wByte *block);
+                wVoid invShiftRows(wByte *block);
 
-                wmkcVoid xorWithIV(wmkcByte *block, wmkcByte *iv);
-                wmkcVoid keyExtension(wmkcByte *key, wmkcByte *iv);
+                wVoid xorWithIV(wByte *block, wByte *iv);
+                wVoid keyExtension(wByte *key, wByte *iv);
 
-                wmkcVoid cipher(wmkcByte *p, wmkcByte *roundKey);
-                wmkcVoid invCipher(wmkcByte *c, wmkcByte *roundKey);
+                wVoid cipher(wByte *p, wByte *roundKey);
+                wVoid invCipher(wByte *c, wByte *roundKey);
 
             public:
-                wmkcByte key[WMKC_FEA_BLOCKLEN << 1];
-                wmkcByte iv[WMKC_FEA_BLOCKLEN];
-                wmkcByte nonce[WMKC_FEA_BLOCKLEN >> 1];
-                wmkcByte roundKey[sizeof(key) * WMKC_FEA_NR]; // len(key) * WMKC_FEA_NR
-                wmkc_u32 segmentSize;
+                wByte key[WMKC_FEA_BLOCKLEN << 1];
+                wByte iv[WMKC_FEA_BLOCKLEN];
+                wByte nonce[WMKC_FEA_BLOCKLEN >> 1];
+                wByte roundKey[sizeof(key) * WMKC_FEA_NR]; // len(key) * WMKC_FEA_NR
+                wU32 segmentSize;
 
-                wmkcVoid ecb_encrypt(wmkcByte *p);
-                wmkcVoid ecb_decrypt(wmkcByte *c);
+                wVoid ecb_encrypt(wByte *p);
+                wVoid ecb_decrypt(wByte *c);
 
-                wmkcVoid cbc_encrypt(wmkcByte *p, wmkcSize n);
-                wmkcVoid cbc_decrypt(wmkcByte *c, wmkcSize n);
+                wVoid cbc_encrypt(wByte *p, wSize n);
+                wVoid cbc_decrypt(wByte *c, wSize n);
 
-                wmkcVoid ctr_xcrypt(wmkcByte *d, wmkcSize n);
+                wVoid ctr_xcrypt(wByte *d, wSize n);
 
-                wmkcVoid cfb_encrypt(wmkcByte *p, wmkcSize n, wmkc_u32 segmentSize);
-                wmkcVoid cfb_decrypt(wmkcByte *c, wmkcSize n, wmkc_u32 segmentSize);
+                wVoid cfb_encrypt(wByte *p, wSize n, wU32 segmentSize);
+                wVoid cfb_decrypt(wByte *c, wSize n, wU32 segmentSize);
 
                 //////////////////////////////////////////////////////////////////
 
-                fea(const wmkcByte *key, const wmkcByte *iv, const wmkc_u32 segmentSize = 128);
+                fea(const wByte *key, const wByte *iv, const wU32 segmentSize = 128);
                 ~fea();
-                void encrypt(wmkcByte *content, wmkcSize size, xcryptMode mode);
-                void decrypt(wmkcByte *content, wmkcSize size, xcryptMode mode);
+                void encrypt(wByte *content, wSize size, xcryptMode mode);
+                void decrypt(wByte *content, wSize size, xcryptMode mode);
         };
     }
 }

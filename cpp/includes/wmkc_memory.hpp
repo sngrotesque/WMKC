@@ -9,8 +9,8 @@
 #endif
 
 namespace wmkc {
-    wmkcVoid memory_zero(wmkcVoid *p, wmkcSize n);
-    wmkcVoid memory_secure(wmkcVoid *p, wmkcSize n);
+    wVoid memory_zero(wVoid *p, wSize n);
+    wVoid memory_secure(wVoid *p, wSize n);
 }
 
 #endif /* WMKC_CPP_MEMORY */

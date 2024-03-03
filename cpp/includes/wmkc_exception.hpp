@@ -28,15 +28,23 @@
 * VC++6.0    6.0        1200
 */
 
-#if defined(WMKC_PLATFORM_WINOS) && (_MSC_VER >= 1930)
+// 为真的话使用自定义实现的to_string方法，否则使用标准库的实现
+// 此项是为了防止某些版本的Visual Studio莫名报错，傻逼Microsoft。
+#define WMKC_ERR_EXCEPTION_TO_STRING false
+
+#if defined(WMKC_PLATFORM_WINOS) && defined(_MSC_VER)
+#   if (WMKC_ERR_EXCEPTION_TO_STRING == false)
+#      pragma comment(lib, "msvcprt")
+#   else
 namespace std {
     template <typename T>
     std::string to_string(T value);
 };
+#   endif
 #endif
 
 namespace wmkc {
-    void exception(wmkc_s32 errCode, std::string funcName, std::string errMessage);
+    void exception(wS32 errCode, std::string funcName, std::string errMessage);
 }
 
 #endif /* WMKC_CPP_EXCEPTION */

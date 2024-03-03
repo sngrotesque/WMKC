@@ -1,6 +1,6 @@
 #include <wmkc_random.hpp>
 
-constexpr wmkcByte BIT_BYTE_SWAP(wmkcByte x)
+constexpr wByte BIT_BYTE_SWAP(wByte x)
 {
     return ((x & 0xf) << 4) ^ (x >> 4);
 }
@@ -10,16 +10,16 @@ wmkc::random::random()
     this->seed();
 }
 
-wmkcVoid wmkc::random::seed()
+wVoid wmkc::random::seed()
 {
     wmkc::Time timer;
     srand((unsigned)(timer.time() * 1.e6));
 }
 
-wmkcSize wmkc::random::rand()
+wSize wmkc::random::rand()
 {
-    wmkcSize n = 0, num[32];
-    wmkc_u32 x, count;
+    wSize n = 0, num[32];
+    wU32 x, count;
     for(x = 0; x < 32; ++x) {
         num[x] = ::rand() ^ (::rand() ^ (::rand() & ::rand()));
         n = n + (n ^ num[x]);
@@ -35,12 +35,12 @@ wmkcSize wmkc::random::rand()
     return n;
 }
 
-wmkcSize wmkc::random::randint(wmkcSize min, wmkcSize max)
+wSize wmkc::random::randint(wSize min, wSize max)
 {
     return this->rand() % (max - min + 1) + min;
 }
 
-wmkcVoid wmkc::random::urandom(wmkcByte *buf, wmkcSize size)
+wVoid wmkc::random::urandom(wByte *buf, wSize size)
 {
     if(!buf || !size) {
         wmkc::exception(wmkcErr_ErrNULL, "wmkc::random::urandom", "buf or size is NULL.");
@@ -68,12 +68,12 @@ wmkcVoid wmkc::random::urandom(wmkcByte *buf, wmkcSize size)
 #   endif
 }
 
-std::string wmkc::random::urandom(wmkc_u32 size)
+std::string wmkc::random::urandom(wU32 size)
 {
     if(!size) {
         return std::string();
     }
-    wmkcByte *buf = new wmkcByte[size];
+    wByte *buf = new wByte[size];
     if(!buf) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::random::urandom",
             "Failed to allocate memory for buf.");
@@ -86,7 +86,7 @@ std::string wmkc::random::urandom(wmkc_u32 size)
         std::rethrow_exception(std::current_exception());
     }
 
-    std::string result((wmkcChar *)buf, size);
+    std::string result((wChar *)buf, size);
     delete[] buf;
     return result;
 }

@@ -20,7 +20,7 @@ typedef struct {
 void *func(void *args)
 {
     thread_obj *thread = (thread_obj *)args;
-    wmkc_u32 number = *((wmkc_u32 *)thread->args);
+    wU32 number = *((wU32 *)thread->args);
     sem_wait(&thread->handle->sem);
     printf("the function is running.\n");
     printf("the function parameter: %u\n", number);
@@ -29,7 +29,7 @@ void *func(void *args)
 int main(int argc, char **argv)
 {
     thread_obj *obj = wmkcNull;
-    wmkc_u32 number = 166;
+    wU32 number = 166;
 
     wmkcMem_new(thread_obj *, obj, sizeof(thread_obj));
     wmkcMem_new(thread_handle_obj *, obj->handle, sizeof(thread_handle_obj));

@@ -3,9 +3,9 @@
 void wmkc::net::exception(std::string funcName)
 {
 #   if defined(WMKC_PLATFORM_WINOS)
-    wmkc_s32 err = WSAGetLastError();
+    wS32 err = WSAGetLastError();
 #   elif defined(WMKC_PLATFORM_LINUX)
-    wmkc_s32 err = errno;
+    wS32 err = errno;
 #   endif
     const char *msg = nullptr;
 

@@ -5,15 +5,15 @@ using namespace wmkcCrypto;
 
 int main(int argc, char **argv)
 {
-    wmkcByte *data = wmkcNull;
-    wmkcSize size = 16777216;
+    wByte *data = wmkcNull;
+    wSize size = 16777216;
     wmkcTime time;
-    wmkcByte key[32];
-    wmkcByte iv[32];
+    wByte key[32];
+    wByte iv[32];
 
     wmkcSNC snc(key, iv, SNC_keyMode::SNC_768);
 
-    data = new wmkcByte[size];
+    data = new wByte[size];
 
     double start = time.time();
     snc.encrypt(data, size, SNC_XcryptMode::CBC);

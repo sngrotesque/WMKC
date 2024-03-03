@@ -1,13 +1,13 @@
 #include <wmkc_struct.hpp>
 
-static const wmkcByte byteOrder[] = {
+static const wByte byteOrder[] = {
     '@', // 按原样顺序
     '>', // 按大端序
     '<', // 按小端序
     '!'  // 网络端序（大端序）
 };
 
-static const wmkcByte formatSymbol[] = {
+static const wByte formatSymbol[] = {
     'B', // unsigned char  -> uint8_t
     'H', // unsigned short -> uint16_t
     'I', // unsigned int   -> uint32_t
@@ -17,14 +17,14 @@ static const wmkcByte formatSymbol[] = {
     'd'  // double
 };
 
-wmkcVoid wmkc::structure::verifySymbol(const std::string format, const wmkcSize args_length)
+wVoid wmkc::structure::verifySymbol(const std::string format, const wSize args_length)
 {
-    const wmkcByte *bo_bp = byteOrder;
-    const wmkcByte *bo_ep = byteOrder + sizeof(byteOrder);
-    const wmkcByte *fy_bp = formatSymbol;
-    const wmkcByte *fy_ep = formatSymbol + sizeof(formatSymbol);
-    wmkcSize expected_length;
-    wmkcBool bo_ok, fy_ok;
+    const wByte *bo_bp = byteOrder;
+    const wByte *bo_ep = byteOrder + sizeof(byteOrder);
+    const wByte *fy_bp = formatSymbol;
+    const wByte *fy_ep = formatSymbol + sizeof(formatSymbol);
+    wSize expected_length;
+    wBool bo_ok, fy_ok;
 
     // 判断是否存在字节序控制字符
     this->orderSymbol = (std::find(bo_bp, bo_ep, format[0]) != bo_ep)?(format[0]):(0x00);
@@ -48,13 +48,13 @@ wmkc::structure::structure()
 
 }
 
-std::string wmkc::structure::pack(std::string format, std::vector<wmkcSize> args)
+std::string wmkc::structure::pack(std::string format, std::vector<wSize> args)
 {
     if(format.empty()) {
         return std::string();
     }
     std::string result;
-    wmkc_u32 index;
+    wU32 index;
 
     this->verifySymbol(format, args.size()); // 检查格式符是否合法
 
@@ -77,9 +77,9 @@ std::string wmkc::structure::pack(std::string format, std::vector<wmkcSize> args
     return result;
 }
 
-std::vector<wmkcSize> wmkc::structure::unpack(std::string format, std::string args)
+std::vector<wSize> wmkc::structure::unpack(std::string format, std::string args)
 {
-    std::vector<wmkcSize> result;
+    std::vector<wSize> result;
 
     return result;
 }

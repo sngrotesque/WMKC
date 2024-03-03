@@ -1,6 +1,6 @@
 #include <crypto/snc.hpp>
 
-static const wmkcByte sbox[256] = {
+static const wByte sbox[256] = {
     // 0     1     2     3     4     5     6     7     8     9     A     B     C     D     E     F
     0xd2, 0xa7, 0xc9, 0xe0, 0x93, 0xc7, 0xb6, 0x43, 0x42, 0x1b, 0x89, 0x79, 0x12, 0xf1, 0x39, 0xd0,
     0xa0, 0x3f, 0xcf, 0x8d, 0xdc, 0x1f, 0xac, 0xe4, 0x01, 0xf7, 0x69, 0xa5, 0xf4, 0xb2, 0xf3, 0x1e,
@@ -20,7 +20,7 @@ static const wmkcByte sbox[256] = {
     0x0e, 0xbd, 0x08, 0xde, 0xb5, 0x82, 0x32, 0x14, 0x10, 0x5d, 0x90, 0x4e, 0x92, 0xe9, 0x0f, 0xb9
 };
 
-static const wmkcByte rsbox[256] = {
+static const wByte rsbox[256] = {
     // 0     1     2     3     4     5     6     7     8     9     A     B     C     D     E     F
     0x26, 0x18, 0xaa, 0xeb, 0x39, 0x94, 0x3a, 0x84, 0xf2, 0x69, 0x48, 0xc3, 0xa3, 0x3b, 0xf0, 0xfe,
     0xf8, 0xba, 0x0c, 0x9b, 0xf7, 0xa1, 0x2c, 0x62, 0x75, 0xca, 0xd6, 0x09, 0x31, 0x29, 0x1f, 0x15,
@@ -46,9 +46,9 @@ static const wmkcByte rsbox[256] = {
 #define SNC_ROWS_MIX(x, a, b, c) (x = ((x-7) ^ (c + a)) ^ b)
 #define SNC_INV_ROWS_MIX(x, a, b, c) (x = ((x ^ b) ^ (c + a)) + 7)
 
-wmkcVoid wmkc::crypto::snc::subBytes(state_t *state)
+wVoid wmkc::crypto::snc::subBytes(state_t *state)
 {
-    wmkc_u32 i;
+    wU32 i;
     for(i = 0; i < SNC_NK; ++i) {
         (*state)[0][i] = SNC_SBOX((*state)[0][i]);
         (*state)[1][i] = SNC_SBOX((*state)[1][i]);
@@ -61,9 +61,9 @@ wmkcVoid wmkc::crypto::snc::subBytes(state_t *state)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::rowsMix(state_t *state)
+wVoid wmkc::crypto::snc::rowsMix(state_t *state)
 {
-    wmkc_u32 i;
+    wU32 i;
     for(i = 0; i < SNC_NB; ++i) {
         SNC_ROWS_MIX((*state)[i][0], (*state)[i][2], (*state)[i][1], (*state)[i][3]);
         SNC_ROWS_MIX((*state)[i][1], (*state)[i][0], (*state)[i][3], (*state)[i][2]);
@@ -72,9 +72,9 @@ wmkcVoid wmkc::crypto::snc::rowsMix(state_t *state)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::columnShift(state_t *state)
+wVoid wmkc::crypto::snc::columnShift(state_t *state)
 {
-    wmkcByte buf;
+    wByte buf;
 
     buf = (*state)[0][0];
     (*state)[0][0] = (*state)[1][0]; (*state)[1][0] = (*state)[2][0];
@@ -101,9 +101,9 @@ wmkcVoid wmkc::crypto::snc::columnShift(state_t *state)
     buf = (*state)[3][3]; (*state)[3][3] = (*state)[7][3]; (*state)[7][3] = buf;
 }
 
-wmkcVoid wmkc::crypto::snc::invSubBytes(state_t *state)
+wVoid wmkc::crypto::snc::invSubBytes(state_t *state)
 {
-    wmkc_u32 i;
+    wU32 i;
     for(i = 0; i < SNC_NK; ++i) {
         (*state)[0][i] = SNC_RSBOX((*state)[0][i]);
         (*state)[1][i] = SNC_RSBOX((*state)[1][i]);
@@ -116,9 +116,9 @@ wmkcVoid wmkc::crypto::snc::invSubBytes(state_t *state)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::invRowsMix(state_t *state)
+wVoid wmkc::crypto::snc::invRowsMix(state_t *state)
 {
-    wmkc_u32 i;
+    wU32 i;
     for(i = 0; i < SNC_NB; ++i) {
         SNC_INV_ROWS_MIX((*state)[i][3], (*state)[i][1], (*state)[i][2], (*state)[i][0]);
         SNC_INV_ROWS_MIX((*state)[i][2], (*state)[i][3], (*state)[i][1], (*state)[i][0]);
@@ -127,9 +127,9 @@ wmkcVoid wmkc::crypto::snc::invRowsMix(state_t *state)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::invColumnShift(state_t *state)
+wVoid wmkc::crypto::snc::invColumnShift(state_t *state)
 {
-    wmkcByte buf;
+    wByte buf;
 
     buf = (*state)[7][3]; (*state)[7][3] = (*state)[3][3]; (*state)[3][3] = buf;
     buf = (*state)[6][3]; (*state)[6][3] = (*state)[2][3]; (*state)[2][3] = buf;
@@ -156,9 +156,9 @@ wmkcVoid wmkc::crypto::snc::invColumnShift(state_t *state)
     (*state)[1][0] = (*state)[0][0]; (*state)[0][0] = buf;
 }
 
-wmkcVoid wmkc::crypto::snc::xorWithIv(state_t *buf, state_t *iv)
+wVoid wmkc::crypto::snc::xorWithIv(state_t *buf, state_t *iv)
 {
-    wmkc_u32 i;
+    wU32 i;
     for(i = 0; i < SNC_NK; ++i) {
         (*buf)[0][i] ^= (*iv)[0][i];
         (*buf)[1][i] ^= (*iv)[1][i];
@@ -171,9 +171,9 @@ wmkcVoid wmkc::crypto::snc::xorWithIv(state_t *buf, state_t *iv)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::cipher(state_t *state, wmkcByte *roundKey)
+wVoid wmkc::crypto::snc::cipher(state_t *state, wByte *roundKey)
 {
-    wmkc_u32 i, r;
+    wU32 i, r;
 
     for(r = 0; r < this->numberRounds; ++r) {
         this->subBytes(state);
@@ -214,9 +214,9 @@ wmkcVoid wmkc::crypto::snc::cipher(state_t *state, wmkcByte *roundKey)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::invCipher(state_t *state, wmkcByte *roundKey)
+wVoid wmkc::crypto::snc::invCipher(state_t *state, wByte *roundKey)
 {
-    wmkc_u32 i, r;
+    wU32 i, r;
 
     for(r = 0; r < this->numberRounds; ++r) {
         this->invRowsMix(state);
@@ -257,10 +257,10 @@ wmkcVoid wmkc::crypto::snc::invCipher(state_t *state, wmkcByte *roundKey)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::keyExtension(wmkc_u16 keySize, wmkcByte *iv, wmkcByte *key)
+wVoid wmkc::crypto::snc::keyExtension(wU16 keySize, wByte *iv, wByte *key)
 {
-    wmkcSize i;
-    wmkcByte buf;
+    wSize i;
+    wByte buf;
 
     for(i = 0; i < keySize; ++i) {
         buf = 
@@ -310,19 +310,19 @@ wmkcVoid wmkc::crypto::snc::keyExtension(wmkc_u16 keySize, wmkcByte *iv, wmkcByt
     }
 }
 
-wmkcVoid wmkc::crypto::snc::ecb_encrypt(wmkcByte *content, wmkcSize size)
+wVoid wmkc::crypto::snc::ecb_encrypt(wByte *content, wSize size)
 {
     state_t *buf = (state_t *)content;
     size /= SNC_BLOCKLEN;
 
-    for(wmkcSize i = 0; i < size; ++i) {
+    for(wSize i = 0; i < size; ++i) {
         this->cipher(buf + i, this->rk);
     }
 }
 
-wmkcVoid wmkc::crypto::snc::ecb_decrypt(wmkcByte *content, wmkcSize size)
+wVoid wmkc::crypto::snc::ecb_decrypt(wByte *content, wSize size)
 {
-    wmkcSize i;
+    wSize i;
 
     state_t *buf = (state_t *)content;
     size /= SNC_BLOCKLEN;
@@ -332,10 +332,10 @@ wmkcVoid wmkc::crypto::snc::ecb_decrypt(wmkcByte *content, wmkcSize size)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::cbc_encrypt(wmkcByte *content, wmkcSize size)
+wVoid wmkc::crypto::snc::cbc_encrypt(wByte *content, wSize size)
 {
-    wmkcSize i;
-    wmkcByte round_iv[SNC_BLOCKLEN];
+    wSize i;
+    wByte round_iv[SNC_BLOCKLEN];
     state_t *buf = (state_t *)content;
     state_t *iv = (state_t *)round_iv;
     size /= SNC_BLOCKLEN;
@@ -348,11 +348,11 @@ wmkcVoid wmkc::crypto::snc::cbc_encrypt(wmkcByte *content, wmkcSize size)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::cbc_decrypt(wmkcByte *content, wmkcSize size)
+wVoid wmkc::crypto::snc::cbc_decrypt(wByte *content, wSize size)
 {
-    wmkcSize i;
-    wmkcByte round_iv[SNC_BLOCKLEN];
-    wmkcByte round_buf[SNC_BLOCKLEN];
+    wSize i;
+    wByte round_iv[SNC_BLOCKLEN];
+    wByte round_buf[SNC_BLOCKLEN];
     state_t *buf = (state_t *)content;
     state_t *iv = (state_t *)round_iv;
     size /= SNC_BLOCKLEN;
@@ -366,11 +366,11 @@ wmkcVoid wmkc::crypto::snc::cbc_decrypt(wmkcByte *content, wmkcSize size)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::ctr_xcrypt(wmkcByte *content, wmkcSize size)
+wVoid wmkc::crypto::snc::ctr_xcrypt(wByte *content, wSize size)
 {
-    wmkcSize i, keyStream_i, counter_i;
-    wmkcByte counter[SNC_BLOCKLEN];
-    wmkcByte keyStream[SNC_BLOCKLEN] = {0};
+    wSize i, keyStream_i, counter_i;
+    wByte counter[SNC_BLOCKLEN];
+    wByte keyStream[SNC_BLOCKLEN] = {0};
 
     wmkc::memory_zero(counter, SNC_BLOCKLEN);
     memcpy(counter, this->iv, SNC_BLOCKLEN >> 1);
@@ -395,10 +395,10 @@ wmkcVoid wmkc::crypto::snc::ctr_xcrypt(wmkcByte *content, wmkcSize size)
     }
 }
 
-wmkcVoid wmkc::crypto::snc::cfb_encrypt(wmkcByte *content, wmkcSize size, wmkcSize segment_size)
+wVoid wmkc::crypto::snc::cfb_encrypt(wByte *content, wSize size, wSize segment_size)
 {
-    wmkcSize i, j;
-    wmkcByte round_iv[SNC_BLOCKLEN];
+    wSize i, j;
+    wByte round_iv[SNC_BLOCKLEN];
     segment_size >>= 3; // 将单位从位转到字节
     size = (size + segment_size - 1) / segment_size; // 得到总共有多少个数据段
 
@@ -412,11 +412,11 @@ wmkcVoid wmkc::crypto::snc::cfb_encrypt(wmkcByte *content, wmkcSize size, wmkcSi
     }
 }
 
-wmkcVoid wmkc::crypto::snc::cfb_decrypt(wmkcByte *content, wmkcSize size, wmkcSize segment_size)
+wVoid wmkc::crypto::snc::cfb_decrypt(wByte *content, wSize size, wSize segment_size)
 {
-    wmkcSize i, j;
-    wmkcByte round_iv[SNC_BLOCKLEN];
-    wmkcByte tmp_buf[SNC_BLOCKLEN];
+    wSize i, j;
+    wByte round_iv[SNC_BLOCKLEN];
+    wByte tmp_buf[SNC_BLOCKLEN];
     segment_size >>= 3; // 将单位从位转到字节
     size = (size + segment_size - 1) / segment_size; // 得到总共有多少个数据段
 
@@ -431,7 +431,7 @@ wmkcVoid wmkc::crypto::snc::cfb_decrypt(wmkcByte *content, wmkcSize size, wmkcSi
     }
 }
 
-wmkc::crypto::snc::snc(const wmkcByte *keyBuf, const wmkcByte *ivBuf, snc_keyMode mode, wmkc_u32 segment_size)
+wmkc::crypto::snc::snc(const wByte *keyBuf, const wByte *ivBuf, snc_keyMode mode, wU32 segment_size)
 : segmentSize(segment_size)
 {
     if(!keyBuf || !ivBuf) {
@@ -443,11 +443,11 @@ wmkc::crypto::snc::snc(const wmkcByte *keyBuf, const wmkcByte *ivBuf, snc_keyMod
     wmkc::memory_secure(this->rk, sizeof(this->rk));
     wmkc::memory_secure(this->iv, sizeof(this->iv));
 
-    wmkcByte *key = nullptr;
-    wmkcByte iv[SNC_BLOCKLEN];
-    wmkc_u32 r, i;
+    wByte *key = nullptr;
+    wByte iv[SNC_BLOCKLEN];
+    wU32 r, i;
 
-    if(!(key = new wmkcByte[this->subKey_length])) {
+    if(!(key = new wByte[this->subKey_length])) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::crypto::snc::snc",
             "Failed to allocate memory for key.");
     }
@@ -490,7 +490,7 @@ wmkc::crypto::snc::~snc()
     wmkc::memory_secure(this->iv, sizeof(this->iv));
 }
 
-wmkcVoid wmkc::crypto::snc::encrypt(wmkcByte *content, wmkcSize size, snc_xcryptMode xcryptMode)
+wVoid wmkc::crypto::snc::encrypt(wByte *content, wSize size, snc_xcryptMode xcryptMode)
 {
     switch(xcryptMode) {
         case snc_xcryptMode::ECB:
@@ -504,7 +504,7 @@ wmkcVoid wmkc::crypto::snc::encrypt(wmkcByte *content, wmkcSize size, snc_xcrypt
     }
 }
 
-wmkcVoid wmkc::crypto::snc::decrypt(wmkcByte *content, wmkcSize size, snc_xcryptMode xcryptMode)
+wVoid wmkc::crypto::snc::decrypt(wByte *content, wSize size, snc_xcryptMode xcryptMode)
 {
     switch(xcryptMode) {
         case snc_xcryptMode::ECB:
@@ -520,12 +520,12 @@ wmkcVoid wmkc::crypto::snc::decrypt(wmkcByte *content, wmkcSize size, snc_xcrypt
 
 std::string wmkc::crypto::snc::encrypt(std::string content, snc_xcryptMode xcryptMode)
 {
-    wmkcByte *src = (wmkcByte *)content.c_str();
-    wmkcByte *dst = nullptr;
-    wmkcSize srcSize = content.size();
-    wmkcSize dstSize = srcSize;
+    wByte *src = (wByte *)content.c_str();
+    wByte *dst = nullptr;
+    wSize srcSize = content.size();
+    wSize dstSize = srcSize;
 
-    if(!(dst = new wmkcByte[dstSize])) {
+    if(!(dst = new wByte[dstSize])) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::crypto::snc::encrypt",
             "Failed to allocate memory for dst.");
     }
@@ -533,19 +533,19 @@ std::string wmkc::crypto::snc::encrypt(std::string content, snc_xcryptMode xcryp
     memcpy(dst, src, srcSize);
     this->encrypt(dst, dstSize, xcryptMode);
 
-    std::string result((wmkcChar *)dst, dstSize);
+    std::string result((wChar *)dst, dstSize);
     delete[] dst;
     return result;
 }
 
 std::string wmkc::crypto::snc::decrypt(std::string content, snc_xcryptMode xcryptMode)
 {
-    wmkcByte *src = (wmkcByte *)content.c_str();
-    wmkcByte *dst = nullptr;
-    wmkcSize srcSize = content.size();
-    wmkcSize dstSize = srcSize;
+    wByte *src = (wByte *)content.c_str();
+    wByte *dst = nullptr;
+    wSize srcSize = content.size();
+    wSize dstSize = srcSize;
 
-    if(!(dst = new wmkcByte[dstSize])) {
+    if(!(dst = new wByte[dstSize])) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::crypto::snc::encrypt",
             "Failed to allocate memory for dst.");
     }
@@ -553,7 +553,7 @@ std::string wmkc::crypto::snc::decrypt(std::string content, snc_xcryptMode xcryp
     memcpy(dst, src, srcSize);
     this->decrypt(dst, dstSize, xcryptMode);
 
-    std::string result((wmkcChar *)dst, dstSize);
+    std::string result((wChar *)dst, dstSize);
     delete[] dst;
     return result;
 }

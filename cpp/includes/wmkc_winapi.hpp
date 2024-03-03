@@ -10,15 +10,15 @@ namespace wmkc {
     class winapi {
         public:
             struct widthHeight {
-                wmkc_u32 width;
-                wmkc_u32 height;
+                wU32 width;
+                wU32 height;
             };
             struct widthHeight getScreenResolution();
             struct widthHeight getCursorPos();
-            std::string getUserName(wmkcChar format = 'A');
-            wmkcVoid setCursorPos(wmkc_u32 x, wmkc_u32 y);
-            wmkcVoid setDesktopWallpaper(std::string path);
-            wmkcVoid opacityStartMenu(BYTE alpha);
+            std::string getUserName(wChar format = 'A');
+            wVoid setCursorPos(wU32 x, wU32 y);
+            wVoid setDesktopWallpaper(std::string path);
+            wVoid opacityStartMenu(BYTE alpha);
     };
 }
 

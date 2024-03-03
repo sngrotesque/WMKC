@@ -16,11 +16,11 @@ namespace wmkc {
     class random {
         public:
             random();
-            wmkcVoid seed();
-            wmkcSize rand();
-            wmkcSize randint(wmkcSize min, wmkcSize max);
-            wmkcVoid urandom(wmkcByte *buf, wmkcSize size);
-            std::string urandom(wmkc_u32 size);
+            wVoid seed();
+            wSize rand();
+            wSize randint(wSize min, wSize max);
+            wVoid urandom(wByte *buf, wSize size);
+            std::string urandom(wU32 size);
     };
 }
 

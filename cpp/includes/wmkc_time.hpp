@@ -18,7 +18,7 @@ namespace wmkc {
     class Time {
         public:
             std::string getNowTime(std::string timeFormat = "%Y-%m-%d %H:%M:%S");
-            wmkcVoid sleep(double _t);
+            wVoid sleep(double _t);
             double time();
     };
 }

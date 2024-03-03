@@ -28,7 +28,7 @@ class net_test {
             wmkcNet::Socket *sockfd = wmkcNull;
             SSL_CTX *ssl_ctx = wmkcNull;
             SSL *ssl = wmkcNull;
-            wmkcChar recvbuf[4096] = {0};
+            wChar recvbuf[4096] = {0};
 
             sockfd = new wmkcNet::Socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             ssl_ctx = SSL_CTX_new(protocol);
@@ -38,7 +38,7 @@ class net_test {
             SSL_CTX_set_cipher_list(ssl_ctx, "HIGH:!aNULL:!eNULL");
             SSL_CTX_set_min_proto_version(ssl_ctx, TLS1_2_VERSION);
             SSL_CTX_set_mode(ssl_ctx, SSL_MODE_RELEASE_BUFFERS);
-            SSL_CTX_set_session_id_context(ssl_ctx, (wmkcByte *)"wmkcSSL_Context", 15);
+            SSL_CTX_set_session_id_context(ssl_ctx, (wByte *)"wmkcSSL_Context", 15);
             ssl = SSL_new(ssl_ctx);
             SSL_set_fd(ssl, sockfd->fd);
             SSL_set_tlsext_host_name(ssl, server_hostname.c_str());
@@ -50,7 +50,7 @@ class net_test {
             SSL_read(ssl, recvbuf, sizeof(recvbuf));
 
             // cout << recvbuf << endl;
-            wmkcMisc::PRINT_RAW((wmkcByte *)recvbuf, sizeof(recvbuf), 1);
+            wmkcMisc::PRINT_RAW((wByte *)recvbuf, sizeof(recvbuf), 1);
 
             SSL_shutdown(ssl);
             SSL_CTX_free(ssl_ctx);

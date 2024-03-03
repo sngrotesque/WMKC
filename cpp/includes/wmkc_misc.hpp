@@ -7,10 +7,10 @@
 
 namespace wmkc {
     namespace misc {
-        wmkcVoid PRINT(const wmkcByte *data, wmkcSize len, wmkcSize num, wmkcBool newline, wmkcBool tableChar);
-        wmkcVoid PRINT_N(const wmkcByte *arr, wmkcSize size, wmkcBool newline);
-        wmkcVoid PRINT_BOX(const wmkcByte *box, wmkcSize size, wmkcSize num, wmkcBool newline);
-        wmkcVoid PRINT_RAW(const wmkcByte *buf, wmkcSize size, wmkcBool newline);
+        wVoid PRINT(const wByte *data, wSize len, wSize num, wBool newline, wBool tableChar);
+        wVoid PRINT_N(const wByte *arr, wSize size, wBool newline);
+        wVoid PRINT_BOX(const wByte *box, wSize size, wSize num, wBool newline);
+        wVoid PRINT_RAW(const wByte *buf, wSize size, wBool newline);
     }
 }
 

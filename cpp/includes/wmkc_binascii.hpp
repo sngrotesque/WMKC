@@ -8,8 +8,8 @@
 namespace wmkc {
     class binascii {
         private:
-            wmkcByte toTop(wmkcByte c);
-            wmkcByte toBot(wmkcByte c);
+            wByte toTop(wByte c);
+            wByte toBot(wByte c);
         public:
             std::string b2a_hex(std::string content);
             std::string a2b_hex(std::string content);

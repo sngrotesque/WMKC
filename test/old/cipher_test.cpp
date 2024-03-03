@@ -6,7 +6,7 @@ using namespace std;
 #define NR 16
 #define BLOCK_SIZE 16
 
-static const wmkcByte sbox[256] = {
+static const wByte sbox[256] = {
     0x8b, 0x94, 0xe2, 0x3c, 0x6b, 0xb3, 0x2b, 0x22, 0x1b, 0x75, 0x1c, 0x5b, 0x79, 0xa6, 0x2d, 0x5c,
     0x45, 0xbd, 0x97, 0x9f, 0x12, 0x8d, 0x34, 0x40, 0x55, 0xe3, 0x5f, 0xd5, 0x1e, 0x33, 0xed, 0x06,
     0x57, 0x9c, 0x70, 0xc9, 0x92, 0xe8, 0x3d, 0x0e, 0x46, 0x3a, 0x03, 0x6e, 0xf3, 0xf8, 0x6a, 0x85,
@@ -26,27 +26,27 @@ static const wmkcByte sbox[256] = {
 
 #define SHIFT_BITS_L(x) (((x >> 5) | (x << 3)) & 0xff)
 
-void subBytes(wmkcByte *block)
+void subBytes(wByte *block)
 {
-    for(wmkc_u32 i = 0; i < BLOCK_SIZE; ++i) {
+    for(wU32 i = 0; i < BLOCK_SIZE; ++i) {
         block[i] = sbox[block[i]];
     }
 }
 
-void shiftBits(wmkcByte *block)
+void shiftBits(wByte *block)
 {
-    for(wmkc_u32 i = 0; i < BLOCK_SIZE; ++i) {
+    for(wU32 i = 0; i < BLOCK_SIZE; ++i) {
         block[i] = SHIFT_BITS_L(block[i]);
     }
 }
 
-void shiftRows(wmkcByte *block)
+void shiftRows(wByte *block)
 {
-    wmkcByte tmp[8];
+    wByte tmp[8];
     memcpy(tmp, block, 8);
     memcpy(block, block + 8, 8);
     memcpy(block + 8, tmp, 8);
-    for(wmkc_u32 i = 0; i < (BLOCK_SIZE >> 1); ++i) {
+    for(wU32 i = 0; i < (BLOCK_SIZE >> 1); ++i) {
         block[i] ^= block[8];
         block[i] ^= block[9];
         block[i] ^= block[10];
@@ -58,10 +58,10 @@ void shiftRows(wmkcByte *block)
     }
 }
 
-void cipher(wmkcByte *block, wmkcByte *roundKey)
+void cipher(wByte *block, wByte *roundKey)
 {
-    wmkc_u32 r, i;
-    wmkcByte *subkey = wmkcNull;
+    wU32 r, i;
+    wByte *subkey = wmkcNull;
     for(r = 0; r < NR; ++r) {
         subBytes(block);
         subkey = roundKey + (r << 4); // roundKey + r * 32
@@ -75,10 +75,10 @@ void cipher(wmkcByte *block, wmkcByte *roundKey)
 
 int main()
 {
-    wmkcChar _tmp[32] = {"hello, world./.."};
-    wmkcChar _key[512] = {"ONo&{A&Jfr.o!V0K*J)eLuv4[Mgn}g&#$b]Wnc*{kqi}zlw8oHk!7~BuWceVU9&),CgK.WPkU,8-cvMVHNmVGWYl6or)k-D5~b3u{O4m(3**VAYmMb32y1yhwU2e5~&QdEPZqbM0&Izq2,oX$njeo*#MS-}083EZ5SRop{Ia/vvv#eQ4[.&cKD,U&wORYToTq}yBOw}(V)s6w8qq)fb#nIT8MY&Cpeyz,ssRkMFr-5L&e36o#2drMsQ%]y%]EF}J"};
-    wmkcByte *data = (wmkcByte *)_tmp;
-    wmkcByte *key  = (wmkcByte *)_key;
+    wChar _tmp[32] = {"hello, world./.."};
+    wChar _key[512] = {"ONo&{A&Jfr.o!V0K*J)eLuv4[Mgn}g&#$b]Wnc*{kqi}zlw8oHk!7~BuWceVU9&),CgK.WPkU,8-cvMVHNmVGWYl6or)k-D5~b3u{O4m(3**VAYmMb32y1yhwU2e5~&QdEPZqbM0&Izq2,oX$njeo*#MS-}083EZ5SRop{Ia/vvv#eQ4[.&cKD,U&wORYToTq}yBOw}(V)s6w8qq)fb#nIT8MY&Cpeyz,ssRkMFr-5L&e36o#2drMsQ%]y%]EF}J"};
+    wByte *data = (wByte *)_tmp;
+    wByte *key  = (wByte *)_key;
 
     printf("Plaintext:\n"); wmkcMisc::PRINT(data, 16, 16, 1, 1);
 

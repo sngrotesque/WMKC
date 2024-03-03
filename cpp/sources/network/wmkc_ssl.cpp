@@ -1,9 +1,9 @@
 #include <network/wmkc_ssl.hpp>
 
-wmkcVoid wmkcSSL_exception(std::string funcName)
+wVoid wmkcSSL_exception(std::string funcName)
 {
-    wmkc_u32 err_code;
-    wmkcChar err_msg[256];
+    wU32 err_code;
+    wChar err_msg[256];
     err_code = ERR_get_error();
     ERR_error_string(err_code, err_msg);
     wmkc::exception(err_code, funcName, err_msg);
@@ -29,7 +29,7 @@ wmkc::net::ssl_context::ssl_context(const SSL_METHOD *method)
     }
 
     // 指定SSL选项
-    wmkcSize options = (SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
+    wSize options = (SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
 #   ifdef WMKC_SSL_STRICT
     options |= (SSL_OP_NO_TLSv1                 | SSL_OP_NO_TLSv1_1);
     options |= (SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_NO_RENEGOTIATION);
@@ -55,7 +55,7 @@ wmkc::net::ssl_context::ssl_context(const SSL_METHOD *method)
     // 设置SSL协议模式
     SSL_CTX_set_mode(this->ssl_ctx, SSL_MODE_RELEASE_BUFFERS);
     // 设置SSL协议会话上下文ID
-    SSL_CTX_set_session_id_context(this->ssl_ctx, (wmkcByte *)"ssl_context", 15);
+    SSL_CTX_set_session_id_context(this->ssl_ctx, (wByte *)"ssl_context", 15);
 
     // 根据CTX新建一个SSL对象
     if(!(this->ssl = SSL_new(this->ssl_ctx))) {

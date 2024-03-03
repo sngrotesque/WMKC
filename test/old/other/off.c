@@ -2,21 +2,21 @@
 
 typedef struct tm TM;
 typedef struct {
-    wmkc_u32 hour;
-    wmkc_u32 min;
-    wmkc_u32 sec;
+    wU32 hour;
+    wU32 min;
+    wU32 sec;
 } offTimeStructure;
 
 // 默认下班时间
 static const offTimeStructure defaultOffTime = {17, 27, 15};
 
-wmkcVoid system_off(wmkcVoid)
+wVoid system_off(wVoid)
 {
     // system("shutdown /f /p");
     MessageBoxExW(wmkcNull, L"将系统关机", L"测试窗口", MB_OK, 0);
 }
 
-wmkcBool check_chcp(wmkcVoid)
+wBool check_chcp(wVoid)
 {
     if(GetConsoleOutputCP() != 65001) {
         if(SetConsoleOutputCP(65001)) {
@@ -28,12 +28,12 @@ wmkcBool check_chcp(wmkcVoid)
     return false;
 }
 
-wmkc_s32 main(wmkc_s32 argc, wmkcChar **argv)
+wS32 main(wS32 argc, wChar **argv)
 {
     TM *now = wmkcNull;
     time_t now_time;
-    wmkc_s32 remain_second;
-    wmkcBool directlyShutdown;
+    wS32 remain_second;
+    wBool directlyShutdown;
     offTimeStructure now_arr;
 
     now_time = time(NULL);

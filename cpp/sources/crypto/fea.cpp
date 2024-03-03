@@ -1,6 +1,6 @@
 #include <crypto/fea.hpp>
 
-static const wmkcByte sbox[256] = {
+static const wByte sbox[256] = {
     // 0     1     2     3     4     5     6     7     8     9     a     n     c     d     e     f
     0x2b, 0x1b, 0xf5, 0xd5, 0x6c, 0x78, 0xe3, 0xef, 0xce, 0x69, 0xb6, 0xda, 0x28, 0x16, 0xc2, 0xbc,
     0x56, 0xe6, 0x65, 0x48, 0x6b, 0xdd, 0xa9, 0x01, 0xcb, 0x94, 0x76, 0xcf, 0x20, 0xa1, 0x19, 0x91,
@@ -20,7 +20,7 @@ static const wmkcByte sbox[256] = {
     0x13, 0xfa, 0x8e, 0x45, 0x24, 0xf8, 0x6e, 0xee, 0xf0, 0x7c, 0x90, 0xd0, 0xf6, 0x43, 0x8f, 0xc9
 };
 
-static const wmkcByte rsbox[256] = {
+static const wByte rsbox[256] = {
     // 0     1     2     3     4     5     6     7     8     9     a     n     c     d     e     f
     0x81, 0x17, 0xa9, 0x71, 0x99, 0x65, 0x3a, 0x9a, 0xa4, 0x2f, 0x2b, 0x4c, 0xdf, 0xa7, 0xbe, 0x42,
     0x78, 0x72, 0xb7, 0xf0, 0x63, 0x36, 0x0d, 0xc3, 0x39, 0x1e, 0x52, 0x01, 0x93, 0xda, 0xc0, 0x2d,
@@ -48,9 +48,9 @@ static const wmkcByte rsbox[256] = {
 #define WMKC_FEA_SBOX(x)  (sbox[(x)])
 #define WMKC_FEA_RSBOX(x) (rsbox[(x)])
 
-wmkcVoid wmkc::crypto::fea::subBytes(wmkcByte *block)
+wVoid wmkc::crypto::fea::subBytes(wByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+    for(wU32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
         *(block + i)     = WMKC_FEA_SBOX(*(block + i));
         *(block + i + 1) = WMKC_FEA_SBOX(*(block + i + 1));
         *(block + i + 2) = WMKC_FEA_SBOX(*(block + i + 2));
@@ -62,9 +62,9 @@ wmkcVoid wmkc::crypto::fea::subBytes(wmkcByte *block)
     }
 }
 
-wmkcVoid wmkc::crypto::fea::invSubBytes(wmkcByte *block)
+wVoid wmkc::crypto::fea::invSubBytes(wByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+    for(wU32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
         *(block + i)     = WMKC_FEA_RSBOX(*(block + i));
         *(block + i + 1) = WMKC_FEA_RSBOX(*(block + i + 1));
         *(block + i + 2) = WMKC_FEA_RSBOX(*(block + i + 2));
@@ -76,9 +76,9 @@ wmkcVoid wmkc::crypto::fea::invSubBytes(wmkcByte *block)
     }
 }
 
-wmkcVoid wmkc::crypto::fea::shiftBits(wmkcByte *block)
+wVoid wmkc::crypto::fea::shiftBits(wByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+    for(wU32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
         *(block + i)     = WMKC_FEA_SHIFT_BITS_L(*(block + i));
         *(block + i + 1) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 1));
         *(block + i + 2) = WMKC_FEA_SHIFT_BITS_L(*(block + i + 2));
@@ -90,9 +90,9 @@ wmkcVoid wmkc::crypto::fea::shiftBits(wmkcByte *block)
     }
 }
 
-wmkcVoid wmkc::crypto::fea::invShiftBits(wmkcByte *block)
+wVoid wmkc::crypto::fea::invShiftBits(wByte *block)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+    for(wU32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
         *(block + i)     = WMKC_FEA_SHIFT_BITS_R(*(block + i));
         *(block + i + 1) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 1));
         *(block + i + 2) = WMKC_FEA_SHIFT_BITS_R(*(block + i + 2));
@@ -104,9 +104,9 @@ wmkcVoid wmkc::crypto::fea::invShiftBits(wmkcByte *block)
     }
 }
 
-wmkcVoid wmkc::crypto::fea::shiftRows(wmkcByte *block)
+wVoid wmkc::crypto::fea::shiftRows(wByte *block)
 {
-    wmkcByte swap_array[8], swap;
+    wByte swap_array[8], swap;
 
     memcpy(swap_array, block, 8);
     memcpy(block, block + 8, 8);
@@ -125,9 +125,9 @@ wmkcVoid wmkc::crypto::fea::shiftRows(wmkcByte *block)
     *(block + 7) ^= swap;
 }
 
-wmkcVoid wmkc::crypto::fea::invShiftRows(wmkcByte *block)
+wVoid wmkc::crypto::fea::invShiftRows(wByte *block)
 {
-    wmkcByte swap_array[8], swap;
+    wByte swap_array[8], swap;
 
     swap = (*(block + 8) ^ *(block + 9) ^ *(block + 10) ^ *(block + 11) ^
         *(block + 12) ^ *(block + 13) ^ *(block + 14) ^ *(block + 15));
@@ -146,9 +146,9 @@ wmkcVoid wmkc::crypto::fea::invShiftRows(wmkcByte *block)
     memcpy(block + 8, swap_array, 8);
 }
 
-wmkcVoid wmkc::crypto::fea::xorWithIV(wmkcByte *block, wmkcByte *iv)
+wVoid wmkc::crypto::fea::xorWithIV(wByte *block, wByte *iv)
 {
-    for(wmkc_u32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
+    for(wU32 i = 0; i < WMKC_FEA_BLOCKLEN; i += 8) {
         *(block + i)     ^= *(iv + i);
         *(block + i + 1) ^= *(iv + i + 1);
         *(block + i + 2) ^= *(iv + i + 2);
@@ -160,11 +160,11 @@ wmkcVoid wmkc::crypto::fea::xorWithIV(wmkcByte *block, wmkcByte *iv)
     }
 }
 
-wmkcVoid wmkc::crypto::fea::keyExtension(wmkcByte *key, wmkcByte *iv)
+wVoid wmkc::crypto::fea::keyExtension(wByte *key, wByte *iv)
 {
-    wmkcByte keyBuffer[sizeof(this->key)];
-    wmkcByte ivBuffer[sizeof(this->iv)];
-    wmkc_u32 rkIndex, index;
+    wByte keyBuffer[sizeof(this->key)];
+    wByte ivBuffer[sizeof(this->iv)];
+    wU32 rkIndex, index;
 
     memcpy(keyBuffer, key, sizeof(this->key));
     memcpy(ivBuffer, iv, sizeof(this->iv));
@@ -214,10 +214,10 @@ wmkcVoid wmkc::crypto::fea::keyExtension(wmkcByte *key, wmkcByte *iv)
     wmkc::memory_secure(ivBuffer, sizeof(this->iv));
 }
 
-wmkcVoid wmkc::crypto::fea::cipher(wmkcByte *p, wmkcByte *roundKey)
+wVoid wmkc::crypto::fea::cipher(wByte *p, wByte *roundKey)
 {
-    wmkc_u32 r, i;
-    wmkcByte *subkey = nullptr;
+    wU32 r, i;
+    wByte *subkey = nullptr;
     for(r = 0; r < WMKC_FEA_NR; ++r) {
         this->subBytes(p);
         subkey = roundKey + (r << 5); // roundKey + r * 32
@@ -236,10 +236,10 @@ wmkcVoid wmkc::crypto::fea::cipher(wmkcByte *p, wmkcByte *roundKey)
     }
 }
 
-wmkcVoid wmkc::crypto::fea::invCipher(wmkcByte *c, wmkcByte *roundKey)
+wVoid wmkc::crypto::fea::invCipher(wByte *c, wByte *roundKey)
 {
-    wmkc_u32 r, i;
-    wmkcByte *subkey = nullptr;
+    wU32 r, i;
+    wByte *subkey = nullptr;
     for(r = 0; r < WMKC_FEA_NR; ++r) {
         this->invShiftBits(c);
         this->invShiftRows(c);
@@ -259,7 +259,7 @@ wmkcVoid wmkc::crypto::fea::invCipher(wmkcByte *c, wmkcByte *roundKey)
 }
 //////////////////////////////////////////////////////////
 
-wmkc::crypto::fea::fea(const wmkcByte *key, const wmkcByte *iv, const wmkc_u32 segmentSize)
+wmkc::crypto::fea::fea(const wByte *key, const wByte *iv, const wU32 segmentSize)
 : key(), iv(), nonce(), roundKey(), segmentSize(segmentSize)
 {
     if(!key || !iv) {
@@ -278,7 +278,7 @@ wmkc::crypto::fea::~fea()
     wmkc::memory_secure(this->iv, sizeof(this->iv));
 }
 
-void wmkc::crypto::fea::encrypt(wmkcByte *content, wmkcSize size, xcryptMode mode)
+void wmkc::crypto::fea::encrypt(wByte *content, wSize size, xcryptMode mode)
 {
     switch(mode) {
         case xcryptMode::ECB:
@@ -292,7 +292,7 @@ void wmkc::crypto::fea::encrypt(wmkcByte *content, wmkcSize size, xcryptMode mod
     }
 }
 
-void wmkc::crypto::fea::decrypt(wmkcByte *content, wmkcSize size, xcryptMode mode)
+void wmkc::crypto::fea::decrypt(wByte *content, wSize size, xcryptMode mode)
 {
     switch(mode) {
         case xcryptMode::ECB:

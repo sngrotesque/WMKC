@@ -8,8 +8,8 @@
 
 namespace wmkc {
     namespace crypto {
-        wmkcVoid generateSbox(wmkcByte *sbox);
-        wmkcVoid generateRSbox(wmkcByte *rsbox, wmkcByte *sbox);
+        wVoid generateSbox(wByte *sbox);
+        wVoid generateRSbox(wByte *rsbox, wByte *sbox);
     }
 }
 

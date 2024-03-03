@@ -107,19 +107,19 @@
 namespace wmkc {
     class structure {
         private:
-            wmkcVoid verifySymbol(const std::string format, const wmkcSize args_length);
+            wVoid verifySymbol(const std::string format, const wSize args_length);
 
         public:
             // 这些数据成员请在实际上线时转为私有成员
-            wmkcByte orderSymbol;
-            wmkcBool swapEndian;
-            wmkcByte bit16[2];
-            wmkcByte bit32[4];
-            wmkcByte bit64[8];
+            wByte orderSymbol;
+            wBool swapEndian;
+            wByte bit16[2];
+            wByte bit32[4];
+            wByte bit64[8];
 
             structure();
-            std::string pack(std::string format, std::vector<wmkcSize> args);
-            std::vector<wmkcSize> unpack(std::string format, std::string args);
+            std::string pack(std::string format, std::vector<wSize> args);
+            std::vector<wSize> unpack(std::string format, std::string args);
     };
 }
 

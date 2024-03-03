@@ -1,6 +1,6 @@
 #include <network/wmkc_net.hpp>
 
-ADDRINFO *wmkc::net::getAddrInfo(wmkc_s32 family, wmkc_s32 type, wmkc_s32 proto, std::string addr, std::string serviceName)
+ADDRINFO *wmkc::net::getAddrInfo(wS32 family, wS32 type, wS32 proto, std::string addr, std::string serviceName)
 {
     ADDRINFO hints = {0};
     hints.ai_family = family;
@@ -8,14 +8,14 @@ ADDRINFO *wmkc::net::getAddrInfo(wmkc_s32 family, wmkc_s32 type, wmkc_s32 proto,
     hints.ai_protocol = proto;
 
     ADDRINFO *sockAddrRes = nullptr;
-    wmkc_s32 err = getaddrinfo(addr.c_str(), serviceName.c_str(), &hints, &sockAddrRes);
+    wS32 err = getaddrinfo(addr.c_str(), serviceName.c_str(), &hints, &sockAddrRes);
     if(err) {
         wmkc::net::exception("wmkc::net::getAddrInfo");
     }
     return sockAddrRes;
 }
 
-std::string wmkc::net::networkAddr2stringAddr(wmkc_s32 family, const wmkcVoid *pAddr)
+std::string wmkc::net::networkAddr2stringAddr(wS32 family, const wVoid *pAddr)
 {
     char tmp_addr[INET6_ADDRSTRLEN];
     if(!inet_ntop(family, pAddr, tmp_addr, INET6_ADDRSTRLEN)) {
@@ -24,12 +24,12 @@ std::string wmkc::net::networkAddr2stringAddr(wmkc_s32 family, const wmkcVoid *p
     return std::string(tmp_addr);
 }
 
-wmkc_u16 wmkc::net::networkPort2numberPort(const wmkc_u16 port)
+wU16 wmkc::net::networkPort2numberPort(const wU16 port)
 {
     return ntohs(port);
 }
 
-wmkc::net::IPEndPoint wmkc::net::getNetworkInfo(wmkcNetSockT sockfd, wmkc_s32 family)
+wmkc::net::IPEndPoint wmkc::net::getNetworkInfo(wSocket sockfd, wS32 family)
 {
     SOCKADDR_IN *ipv4 = nullptr;
     SOCKADDR_IN6 *ipv6 = nullptr;
@@ -57,7 +57,7 @@ wmkc::net::IPEndPoint wmkc::net::getNetworkInfo(wmkcNetSockT sockfd, wmkc_s32 fa
     return addr_info;
 }
 
-wmkc::net::IPEndPoint wmkc::net::getNetworkInfo(wmkc_s32 family, SOCKADDR *pAddr)
+wmkc::net::IPEndPoint wmkc::net::getNetworkInfo(wS32 family, SOCKADDR *pAddr)
 {
     SOCKADDR_IN *ipv4 = nullptr;
     SOCKADDR_IN6 *ipv6 = nullptr;
@@ -80,7 +80,7 @@ wmkc::net::IPEndPoint wmkc::net::getNetworkInfo(wmkc_s32 family, SOCKADDR *pAddr
 }
 
 //****************************************************************************************************//
-wmkc::net::Socket::Socket(wmkc_s32 _family, wmkc_s32 _type, wmkc_s32 _proto, wmkcNetSockT _fd)
+wmkc::net::Socket::Socket(wS32 _family, wS32 _type, wS32 _proto, wSocket _fd)
 : timeout(), fd(), family(_family), type(_type), proto(_proto), transmissionLength(), lAddr(), rAddr()
 {
     if(_fd == WMKC_NET_ERROR) {
@@ -103,12 +103,12 @@ void wmkc::net::Socket::settimeout(double _val)
     this->timeout = _val;
 #   if defined(WMKC_PLATFORM_WINOS)
     DWORD _timeout = (DWORD)(this->timeout * 1e3);
-    wmkcChar *optval = (wmkcChar *)&_timeout;
+    wChar *optval = (wChar *)&_timeout;
 #   elif defined(WMKC_PLATFORM_LINUX)
     double intpart = 0;
     double fracpart = modf(this->timeout, &intpart);
     struct timeval _timeout = {.tv_sec=(long)intpart, .tv_usec=(long)(fracpart * 1e6)};
-    wmkcVoid *optval = (wmkcVoid *)&_timeout;
+    wVoid *optval = (wVoid *)&_timeout;
 #   endif
 
     if(setsockopt(this->fd, SOL_SOCKET, SO_SNDTIMEO, optval, sizeof(_timeout)) ||
@@ -117,7 +117,7 @@ void wmkc::net::Socket::settimeout(double _val)
     }
 }
 
-void wmkc::net::Socket::connect(const std::string addr, const wmkc_u16 port)
+void wmkc::net::Socket::connect(const std::string addr, const wU16 port)
 {
     ADDRINFO *sockAddrResult = wmkc::net::getAddrInfo(this->family, this->type, this->proto,
         addr, std::to_string(port));
@@ -132,7 +132,7 @@ void wmkc::net::Socket::connect(const std::string addr, const wmkc_u16 port)
     freeaddrinfo(sockAddrResult);
 }
 
-void wmkc::net::Socket::bind(const std::string addr, const wmkc_u16 port)
+void wmkc::net::Socket::bind(const std::string addr, const wU16 port)
 {
     ADDRINFO *sockAddrResult = wmkc::net::getAddrInfo(this->family, this->type, this->proto,
         addr, std::to_string(port));
@@ -146,7 +146,7 @@ void wmkc::net::Socket::bind(const std::string addr, const wmkc_u16 port)
     freeaddrinfo(sockAddrResult);
 }
 
-void wmkc::net::Socket::listen(const wmkc_s32 backlog)
+void wmkc::net::Socket::listen(const wS32 backlog)
 {
     if(::listen(this->fd, backlog) == WMKC_NET_ERROR) {
         wmkc::net::exception("wmkc::net::Socket::listen");
@@ -157,7 +157,7 @@ wmkc::net::Socket wmkc::net::Socket::accept()
 {
     SOCKADDR client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
-    wmkcNetSockT client_sockfd;
+    wSocket client_sockfd;
 
     if((client_sockfd = ::accept(this->fd, &client_addr, &client_addr_len)) == WMKC_NET_ERROR) {
         wmkc::net::exception("wmkc::net::Socket::accept");
@@ -166,20 +166,20 @@ wmkc::net::Socket wmkc::net::Socket::accept()
     return wmkc::net::Socket(this->family, this->type, this->proto, client_sockfd);
 }
 
-void wmkc::net::Socket::send(const std::string content, const wmkc_s32 flag)
+void wmkc::net::Socket::send(const std::string content, const wS32 flag)
 {
-    this->transmissionLength = ::send(this->fd, (wmkcNetBufT *)content.c_str(), content.size(), flag);
+    this->transmissionLength = ::send(this->fd, (wChar *)content.c_str(), content.size(), flag);
 
     if(this->transmissionLength == WMKC_NET_ERROR) {
         wmkc::net::exception("wmkc::net::Socket::send");
     }
 }
 
-void wmkc::net::Socket::sendall(const std::string content, const wmkc_s32 flag)
+void wmkc::net::Socket::sendall(const std::string content, const wS32 flag)
 {
-    wmkcNetBufT *offset_ptr = (wmkcNetBufT *)content.c_str();
-    uint32_t size = (socklen_t)content.size();
-    uint32_t retry_count = 5;
+    wChar *offset_ptr = (wChar *)content.c_str();
+    wU32 size = (socklen_t)content.size();
+    wU32 retry_count = 5;
 
     while(size) {
         this->transmissionLength = ::send(this->fd, offset_ptr, size, flag);
@@ -195,9 +195,9 @@ void wmkc::net::Socket::sendall(const std::string content, const wmkc_s32 flag)
     }
 }
 
-std::string wmkc::net::Socket::recv(const wmkc_s32 len, const wmkc_s32 flag)
+std::string wmkc::net::Socket::recv(const wS32 len, const wS32 flag)
 {
-    wmkcNetBufT *buffer = new wmkcNetBufT[len];
+    wChar *buffer = new wChar[len];
     if(!buffer) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::net::Socket::recv",
             "Failed to allocate memory for buffer.");
@@ -208,13 +208,13 @@ std::string wmkc::net::Socket::recv(const wmkc_s32 len, const wmkc_s32 flag)
         wmkc::net::exception("wmkc::net::Socket::recv");
     }
 
-    std::string content((wmkcChar *)buffer, this->transmissionLength);
+    std::string content((wChar *)buffer, this->transmissionLength);
 
     delete[] buffer;
     return content;
 }
 
-void wmkc::net::Socket::sendto(const std::string content, wmkc::net::IPEndPoint target, const wmkc_s32 flag)
+void wmkc::net::Socket::sendto(const std::string content, wmkc::net::IPEndPoint target, const wS32 flag)
 {
     ADDRINFO *sockAddrResult = wmkc::net::getAddrInfo(this->family, this->type, this->proto,
         target.addr, std::to_string(target.port));
@@ -229,9 +229,9 @@ void wmkc::net::Socket::sendto(const std::string content, wmkc::net::IPEndPoint 
     freeaddrinfo(sockAddrResult);
 }
 
-std::string wmkc::net::Socket::recvfrom(const wmkc_s32 len, SOCKADDR *from, socklen_t *fromlen, const wmkc_s32 flag)
+std::string wmkc::net::Socket::recvfrom(const wS32 len, SOCKADDR *from, socklen_t *fromlen, const wS32 flag)
 {
-    wmkcNetBufT *buffer = new wmkcNetBufT[len];
+    wChar *buffer = new wChar[len];
     if(!buffer) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::net::Socket::recvfrom",
             "Failed to allocate memory for buffer.");
@@ -242,13 +242,13 @@ std::string wmkc::net::Socket::recvfrom(const wmkc_s32 len, SOCKADDR *from, sock
         exception("wmkc::net::Socket::recvfrom");
     }
 
-    std::string content((wmkcChar *)buffer, this->transmissionLength);
+    std::string content((wChar *)buffer, this->transmissionLength);
 
     delete[] buffer;
     return content;
 }
 
-void wmkc::net::Socket::shutdown(const wmkc_s32 how)
+void wmkc::net::Socket::shutdown(const wS32 how)
 {
     if(::shutdown(this->fd, how) == WMKC_NET_ERROR) {
         wmkc::net::exception("wmkc::net::Socket::shutdown");

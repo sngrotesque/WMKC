@@ -6,11 +6,11 @@ wmkc::net::packet::packet(wmkc::net::Socket current_fd)
     memcpy(this->end, WMKC_PACKET_END, WMKC_PACKET_END_LEN);
 }
 
-wmkcVoid wmkc::net::packet::send(std::string content)
+wVoid wmkc::net::packet::send(std::string content)
 {
     std::string packet;
     wmkc::structure _struct;
-    wmkcByte *p = nullptr;
+    wByte *p = nullptr;
     // begin
     // 1. get seq, and seq -> BBBB, (2333 -> 00 00 09 1d)
     packet.append(_struct.pack("!I", {this->seq}));
@@ -20,7 +20,7 @@ wmkcVoid wmkc::net::packet::send(std::string content)
     packet.append(_struct.pack("!I", {this->length}));
 
     // 3. get crc32, (00 00 09 1d 04 52 e8 b0 -> CRC32 -> 1740733043 -> 67 c1 7a 73)
-    p = (wmkcByte *)packet.c_str();
+    p = (wByte *)packet.c_str();
     this->crc = crc32(0, p, packet.size());
     packet.append(_struct.pack("!I", {this->crc}));
 

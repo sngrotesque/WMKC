@@ -1,12 +1,12 @@
 #include <wmkc_pad.hpp>
 
-wmkcVoid wmkc::pad(wmkcByte *src, wmkcSize *size, wmkc_u32 blockSize, wmkcBool randVal)
+wVoid wmkc::pad(wByte *src, wSize *size, wU32 blockSize, wBool randVal)
 {
     if(!src || !size) {
         wmkc::exception(wmkcErr_ErrNULL, "wmkc::pad", "src or size is NULL.");
     }
-    wmkc_u32 padLen;
-    wmkcSize totalLen;
+    wU32 padLen;
+    wSize totalLen;
     wmkc::random random;
 
     padLen = (blockSize - *size % blockSize);
@@ -22,14 +22,14 @@ wmkcVoid wmkc::pad(wmkcByte *src, wmkcSize *size, wmkc_u32 blockSize, wmkcBool r
     src[(*size = totalLen) - 1] = padLen & 0xff;
 }
 
-wmkcVoid wmkc::unpad(wmkcByte *src, wmkcSize *size)
+wVoid wmkc::unpad(wByte *src, wSize *size)
 {
     if(!src || !size) {
         wmkc::exception(wmkcErr_ErrNULL, "wmkc::pad", "src or size is NULL.");
     }
 
-    wmkcSize padLen;
-    wmkcSize index;
+    wSize padLen;
+    wSize index;
 
     padLen = src[*size - 1];
 
@@ -39,21 +39,21 @@ wmkcVoid wmkc::unpad(wmkcByte *src, wmkcSize *size)
     *size = *size - padLen;
 }
 
-wmkcByte *wmkc::pkcs7_pad(const wmkcByte *src, wmkcSize *size, wmkc_u32 blockSize)
+wByte *wmkc::pkcs7_pad(const wByte *src, wSize *size, wU32 blockSize)
 {
     if(!src || !size) {
         wmkc::exception(wmkcErr_ErrNULL, "wmkc::pkcs7_pad", "src or size is NULL.");
     }
-    wmkcByte *srcData = (wmkcByte *)src;
-    wmkcSize srcSize = *size;
+    wByte *srcData = (wByte *)src;
+    wSize srcSize = *size;
 
-    wmkc_u32 padLen;
-    wmkcSize totalLen;
+    wU32 padLen;
+    wSize totalLen;
 
     padLen = blockSize - srcSize % blockSize;
     totalLen = srcSize + padLen;
 
-    wmkcByte *padded = new wmkcByte[totalLen];
+    wByte *padded = new wByte[totalLen];
     memcpy(padded, srcData, srcSize);
     memset(padded + srcSize, padLen, padLen);
 
@@ -62,15 +62,15 @@ wmkcByte *wmkc::pkcs7_pad(const wmkcByte *src, wmkcSize *size, wmkc_u32 blockSiz
     return padded;
 }
 
-wmkcByte *wmkc::pkcs7_unpad(const wmkcByte *src, wmkcSize *size)
+wByte *wmkc::pkcs7_unpad(const wByte *src, wSize *size)
 {
     if(!src || !size) {
         wmkc::exception(wmkcErr_ErrNULL, "wmkc::pkcs7_pad", "src or size is NULL.");
     }
-    wmkc_u32 padLen = src[*size - 1];
-    wmkcSize unpaddedLen = *size - padLen;
+    wU32 padLen = src[*size - 1];
+    wSize unpaddedLen = *size - padLen;
 
-    wmkcByte *unpadded = new wmkcByte[unpaddedLen];
+    wByte *unpadded = new wByte[unpaddedLen];
     memcpy(unpadded, src, unpaddedLen);
 
     *size = unpaddedLen;

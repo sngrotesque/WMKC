@@ -37,14 +37,14 @@ void check()
 int main()
 {
     wmkcTime_obj timer;
-    wmkcByte key;
+    wByte key;
     double _timer;
-    wmkc_u32 res;
+    wU32 res;
 
     check();
 
     _timer = 0;
-    for(wmkc_u32 count = 0; count < 3; ++count) {
+    for(wU32 count = 0; count < 3; ++count) {
         do {
             print_red();
             wait();
@@ -59,7 +59,7 @@ int main()
         _timer += timer.totalTime;
     }
 
-    res = (wmkc_u32)((_timer / 3) * 1000);
+    res = (wU32)((_timer / 3) * 1000);
     if(res < 150) {
         printf(WMKC_COLOR_SET(WMKC_COLOR_BACK_CYAN, "-> Speed: %ums.\n"), res);
     } else if(res >= 150 && res < 260) {

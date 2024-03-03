@@ -15,8 +15,8 @@ namespace wmkc {
             const EVP_MD *md;
 
         public:
-            wmkcByte digest[64 + 1]; // SHA-512
-            wmkcByte hexdigest[(64 << 1) + 1];
+            wByte digest[64 + 1]; // SHA-512
+            wByte hexdigest[(64 << 1) + 1];
     };
 }
 

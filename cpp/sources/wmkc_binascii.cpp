@@ -1,6 +1,6 @@
 #include <wmkc_binascii.hpp>
 
-static const wmkcByte hexTable[256] = {
+static const wByte hexTable[256] = {
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
@@ -18,12 +18,12 @@ static const wmkcByte hexTable[256] = {
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
     0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f};
 
-wmkcByte wmkc::binascii::toTop(wmkcByte c)
+wByte wmkc::binascii::toTop(wByte c)
 {
     return ((c >> 4) < 0xa) ? ((c >> 4) + 0x30) : ((c >> 4) + 0x57);
 }
 
-wmkcByte wmkc::binascii::toBot(wmkcByte c)
+wByte wmkc::binascii::toBot(wByte c)
 {
     return ((c & 0xf) < 0xa) ? ((c & 0xf) + 0x30) : ((c & 0xf) + 0x57);
 }
@@ -33,11 +33,11 @@ std::string wmkc::binascii::b2a_hex(std::string content)
     if(content.empty()) {
         return std::string();
     }
-    wmkcSize i;
-    wmkcByte *src = (wmkcByte *)content.c_str();
-    wmkcSize srcSize = content.size();
+    wSize i;
+    wByte *src = (wByte *)content.c_str();
+    wSize srcSize = content.size();
 
-    wmkcByte *dst = new wmkcByte[srcSize << 1];
+    wByte *dst = new wByte[srcSize << 1];
     if(!dst) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::binascii::b2a_hex",
             "Failed to allocate memory for dst.");
@@ -48,7 +48,7 @@ std::string wmkc::binascii::b2a_hex(std::string content)
         dst[(i << 1) + 1] = this->toBot(src[i]);
     }
 
-    std::string result((wmkcChar *)dst, srcSize << 1);
+    std::string result((wChar *)dst, srcSize << 1);
     delete[] dst;
     return result;
 }
@@ -58,19 +58,19 @@ std::string wmkc::binascii::a2b_hex(std::string content)
     if(content.empty()) {
         return std::string();
     }
-    wmkcSize srcIndex, dstIndex;
-    wmkc_s32 top, bot;
+    wSize srcIndex, dstIndex;
+    wS32 top, bot;
 
-    wmkcByte *src = (wmkcByte *)content.c_str();
-    wmkcSize srcSize = content.size();
-    wmkcByte *dst = nullptr;
+    wByte *src = (wByte *)content.c_str();
+    wSize srcSize = content.size();
+    wByte *dst = nullptr;
 
     if(srcSize & 1) {
         wmkc::exception(wmkcErr_Err, "wmkc::binascii::a2b_hex",
             "Wrong type, should not be an odd length.");
     }
 
-    if(!(dst = new wmkcByte[srcSize >> 1])) {
+    if(!(dst = new wByte[srcSize >> 1])) {
         wmkc::exception(wmkcErr_ErrMemory, "wmkc::binascii::a2b_hex",
             "Failed to allocate memory for dst.");
     }
@@ -86,7 +86,7 @@ std::string wmkc::binascii::a2b_hex(std::string content)
         dst[dstIndex] = (top << 4) + bot;
     }
 
-    std::string result((wmkcChar *)dst, srcSize >> 1);
+    std::string result((wChar *)dst, srcSize >> 1);
     delete[] dst;
     return result;
 }

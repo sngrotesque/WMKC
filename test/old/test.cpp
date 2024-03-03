@@ -39,7 +39,7 @@ void struct_test()
     wmkcStruct Struct;
 
     string format = ">HHI";
-    vector<wmkcSize> args = {
+    vector<wSize> args = {
         0x1234, // ID
         0x0134, // Length
         0x00000003  // test
@@ -48,7 +48,7 @@ void struct_test()
     try {
         string res = Struct.pack(format, args);
         printf("Struct.orderSymbol: %d\n", Struct.orderSymbol);
-        wmkcMisc::PRINT_RAW((wmkcByte *)(res.c_str()), res.size(), true);
+        wmkcMisc::PRINT_RAW((wByte *)(res.c_str()), res.size(), true);
     } catch(exception &e) {
         cout << e.what() << endl;
     }

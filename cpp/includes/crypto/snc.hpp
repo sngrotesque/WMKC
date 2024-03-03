@@ -10,51 +10,51 @@
 #define SNC_NB 8
 #define SNC_NK 4
 
-static const wmkcByte SNC_NR[3] = {7, 8, 9};
-static const wmkcByte SNC_KN[3] = {32, 64, 96};
+static const wByte SNC_NR[3] = {7, 8, 9};
+static const wByte SNC_KN[3] = {32, 64, 96};
 
 namespace wmkc {
     namespace crypto {
-        typedef wmkcByte state_t[SNC_NB][SNC_NK];
+        typedef wByte state_t[SNC_NB][SNC_NK];
         enum class snc_keyMode {SNC_256, SNC_512, SNC_768};
         enum class snc_xcryptMode {ECB, CBC, CTR, CFB};
 
         class snc {
             private:
-                wmkc_u16 numberRounds;
-                wmkc_u16 subKey_length;
+                wU16 numberRounds;
+                wU16 subKey_length;
                 snc_keyMode keyMode;
-                wmkcByte iv[SNC_BLOCKLEN];
-                wmkcByte rk[864];
+                wByte iv[SNC_BLOCKLEN];
+                wByte rk[864];
 
-                wmkcVoid subBytes(state_t *state);
-                wmkcVoid rowsMix(state_t *state);
-                wmkcVoid columnShift(state_t *state);
+                wVoid subBytes(state_t *state);
+                wVoid rowsMix(state_t *state);
+                wVoid columnShift(state_t *state);
 
-                wmkcVoid invSubBytes(state_t *state);
-                wmkcVoid invRowsMix(state_t *state);
-                wmkcVoid invColumnShift(state_t *state);
+                wVoid invSubBytes(state_t *state);
+                wVoid invRowsMix(state_t *state);
+                wVoid invColumnShift(state_t *state);
 
-                wmkcVoid xorWithIv(state_t *buf, state_t *iv);
+                wVoid xorWithIv(state_t *buf, state_t *iv);
 
-                wmkcVoid cipher(state_t *state, wmkcByte *roundKey);
-                wmkcVoid invCipher(state_t *state, wmkcByte *roundKey);
+                wVoid cipher(state_t *state, wByte *roundKey);
+                wVoid invCipher(state_t *state, wByte *roundKey);
 
-                wmkcVoid keyExtension(wmkc_u16 keySize, wmkcByte *iv, wmkcByte *key);
+                wVoid keyExtension(wU16 keySize, wByte *iv, wByte *key);
 
-                wmkcVoid ecb_encrypt(wmkcByte *content, wmkcSize size);
-                wmkcVoid ecb_decrypt(wmkcByte *content, wmkcSize size);
-                wmkcVoid cbc_encrypt(wmkcByte *content, wmkcSize size);
-                wmkcVoid cbc_decrypt(wmkcByte *content, wmkcSize size);
-                wmkcVoid ctr_xcrypt(wmkcByte *content, wmkcSize size);
-                wmkcVoid cfb_encrypt(wmkcByte *content, wmkcSize size, wmkcSize segment_size);
-                wmkcVoid cfb_decrypt(wmkcByte *content, wmkcSize size, wmkcSize segment_size);
+                wVoid ecb_encrypt(wByte *content, wSize size);
+                wVoid ecb_decrypt(wByte *content, wSize size);
+                wVoid cbc_encrypt(wByte *content, wSize size);
+                wVoid cbc_decrypt(wByte *content, wSize size);
+                wVoid ctr_xcrypt(wByte *content, wSize size);
+                wVoid cfb_encrypt(wByte *content, wSize size, wSize segment_size);
+                wVoid cfb_decrypt(wByte *content, wSize size, wSize segment_size);
             public:
-                wmkc_u32 segmentSize;
-                snc(const wmkcByte *keyBuf, const wmkcByte *ivBuf, snc_keyMode mode = snc_keyMode::SNC_256, wmkc_u32 segment_size = 256);
+                wU32 segmentSize;
+                snc(const wByte *keyBuf, const wByte *ivBuf, snc_keyMode mode = snc_keyMode::SNC_256, wU32 segment_size = 256);
                 ~snc();
-                wmkcVoid encrypt(wmkcByte *content, wmkcSize size, snc_xcryptMode xcryptMode = snc_xcryptMode::CBC);
-                wmkcVoid decrypt(wmkcByte *content, wmkcSize size, snc_xcryptMode xcryptMode = snc_xcryptMode::CBC);
+                wVoid encrypt(wByte *content, wSize size, snc_xcryptMode xcryptMode = snc_xcryptMode::CBC);
+                wVoid decrypt(wByte *content, wSize size, snc_xcryptMode xcryptMode = snc_xcryptMode::CBC);
                 std::string encrypt(std::string content, snc_xcryptMode xcryptMode = snc_xcryptMode::CBC);
                 std::string decrypt(std::string content, snc_xcryptMode xcryptMode = snc_xcryptMode::CBC);
         };

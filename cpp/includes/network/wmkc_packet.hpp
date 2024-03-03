@@ -31,17 +31,17 @@ namespace wmkc {
                 net::Socket fd;
 
                 // order: [Seq>Length>CRC>Data>Digest>End]
-                wmkcByte digest[32]; // SHA-256 Digest
-                wmkc_u32 _;          // nothing...just pad
-                wmkc_u32 seq;        // packet seq
-                wmkc_u32 crc;        // [seq + length] crc
-                wmkc_u32 length;     // packet data length
-                wmkcByte *data;      // packet data
-                wmkcByte end[8];     // packet end
+                wByte digest[32]; // SHA-256 Digest
+                wU32 _;          // nothing...just pad
+                wU32 seq;        // packet seq
+                wU32 crc;        // [seq + length] crc
+                wU32 length;     // packet data length
+                wByte *data;      // packet data
+                wByte end[8];     // packet end
 
             public:
                 packet(net::Socket current_fd);
-                wmkcVoid send(std::string content);
+                wVoid send(std::string content);
                 std::string recv();
         };
     };

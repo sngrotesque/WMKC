@@ -19,12 +19,12 @@ typedef struct tagCharColumn {
     CharChain *current;
     CharChain *point;
 
-    wmkc_s32 column_x;   // 显示列开始的x坐标
-    wmkc_s32 column_y;   // 显示列开始的y坐标
-    wmkc_s32 column_len; // 显示列的长度
+    wS32 column_x;   // 显示列开始的x坐标
+    wS32 column_y;   // 显示列开始的y坐标
+    wS32 column_len; // 显示列的长度
 
-    wmkc_s32 iStopTimes; // 已经停滞的次数
-    wmkc_s32 iMustStopTimes; // 必须停滞的次数
+    wS32 iStopTimes; // 已经停滞的次数
+    wS32 iMustStopTimes; // 必须停滞的次数
 } CharColumn, *pCharColumn;
 
 int main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
