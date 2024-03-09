@@ -145,10 +145,10 @@ def main():
     cmp.add_parameter('cpp/sources/crypto/fea_ctr.cpp')
 
     # cmp.add_parameter('cpp/sources/wmkc_base64.cpp')
-    # cmp.add_parameter('cpp/sources/wmkc_random.cpp')
+    cmp.add_parameter('cpp/sources/wmkc_random.cpp')
     # cmp.add_parameter('cpp/sources/wmkc_struct.cpp')
     cmp.add_parameter('cpp/sources/wmkc_time.cpp')
-    # cmp.add_parameter('cpp/sources/wmkc_pad.cpp')
+    cmp.add_parameter('cpp/sources/wmkc_pad.cpp')
 
     start = time.time()
     cmp.build()
