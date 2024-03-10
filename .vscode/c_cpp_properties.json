@@ -4,8 +4,8 @@
             "name": "gcc-x64",
             "includePath": [
                 "${workspaceFolder}",
-                "${workspaceFolder}/c/**",
-                "${workspaceFolder}/cpp/**",
+                "${workspaceFolder}/includes",
+                "${workspaceFolder}/sources",
                 "C:/Users/Administrator/Desktop/develop/MSYS2/",
                 "C:/Users/Administrator/Desktop/develop/MSYS2/mingw64/include/**"
             ],
