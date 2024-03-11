@@ -187,7 +187,7 @@ wVoid wmkc::crypto::snc::cipher(state_t *state, wByte *roundKey)
             (*state)[6][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 6 + i));
             (*state)[7][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 7 + i));
 
-            if(this->keyMode == SNC_512 || this->keyMode == SNC_768) {
+            if(this->keyMode == snc_keyMode::SNC_512 || this->keyMode == snc_keyMode::SNC_768) {
                 (*state)[0][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 0 + (i + 32)));
                 (*state)[1][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 1 + (i + 32)));
                 (*state)[2][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 2 + (i + 32)));
@@ -198,7 +198,7 @@ wVoid wmkc::crypto::snc::cipher(state_t *state, wByte *roundKey)
                 (*state)[7][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 7 + (i + 32)));
             }
 
-            if(this->keyMode == SNC_768) {
+            if(this->keyMode == snc_keyMode::SNC_768) {
                 (*state)[0][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 0 + (i + 64)));
                 (*state)[1][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 1 + (i + 64)));
                 (*state)[2][i] ^= *(roundKey + (r * this->subKey_length) + (SNC_NK * 2 + (i + 64)));
@@ -222,7 +222,7 @@ wVoid wmkc::crypto::snc::invCipher(state_t *state, wByte *roundKey)
         this->invRowsMix(state);
         this->invColumnShift(state);
         for(i = 0; i < SNC_NK; ++i) {
-            if(this->keyMode == SNC_768) {
+            if(this->keyMode == snc_keyMode::SNC_768) {
                 (*state)[0][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 0 + (i + 64)));
                 (*state)[1][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 1 + (i + 64)));
                 (*state)[2][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 2 + (i + 64)));
@@ -233,7 +233,7 @@ wVoid wmkc::crypto::snc::invCipher(state_t *state, wByte *roundKey)
                 (*state)[7][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 7 + (i + 64)));
             }
 
-            if(this->keyMode == SNC_512 || this->keyMode == SNC_768) {
+            if(this->keyMode == snc_keyMode::SNC_512 || this->keyMode == snc_keyMode::SNC_768) {
                 (*state)[0][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 0 + (i + 32)));
                 (*state)[1][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 1 + (i + 32)));
                 (*state)[2][i] ^= *(roundKey + ((this->numberRounds - r - 1) * this->subKey_length) + (SNC_NK * 2 + (i + 32)));

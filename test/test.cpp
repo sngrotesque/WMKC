@@ -21,15 +21,15 @@ void fea_speed(wmkc::crypto::xcryptMode mode, wSize length = 16777216)
     fea.encrypt(buffer, length, mode);
     stop = timer.time();
 
-    printf("data length: %.4lf, time used: %.4lf\n",
+    printf("data length: %.2lfMB, time used: %.4lf\n",
         (double)(length / (1024 * 1024)), (stop-start));
 
     delete[] buffer;
 }
 
-void fea_encrypt_test(wByte *data, wSize size, wmkc::crypto::xcryptMode mode = wmkc::crypto::xcryptMode::CTR)
+void fea_encrypt_test(wByte *data, wSize size, wmkc::crypto::xcryptMode mode, wBool encrypt)
 {
-    wmkc::crypto::fea fea(fea_test_key, fea_test_iv);
+    wmkc::crypto::fea fea(fea_test_key, fea_test_iv, 64);
 
     switch(mode) {
         case wmkc::crypto::xcryptMode::ECB:
@@ -42,24 +42,32 @@ void fea_encrypt_test(wByte *data, wSize size, wmkc::crypto::xcryptMode mode = w
             std::cout << "Current encryption mode: CFB.\n"; break;
     }
 
-    std::cout << "Plaintext:\n";
+    if(encrypt) {
+        std::cout << "Plaintext:\n";
+    } else {
+        std::cout << "Ciphertext:\n";
+    }
     wmkc::misc::PRINT(data, size, 32, (size % 32), true);
     std::cout << "Key: ";
     wmkc::misc::PRINT(fea_test_key, 32, 32, 1, true);
     std::cout << "Iv:  ";
     wmkc::misc::PRINT(fea_test_iv, 16, 16, 1, true);
 
-    fea.encrypt(data, size, mode);
-
-    std::cout << "Ciphertext:\n";
+    if(encrypt) {
+        fea.encrypt(data, size, mode);
+        std::cout << "Ciphertext:\n";
+    } else {
+        fea.decrypt(data, size, mode);
+        std::cout << "Plaintext:\n";
+    }
     wmkc::misc::PRINT(data, size, 32, (size % 32), true);
 }
 
 int main()
 {
-    wChar text[2048] = {"hello, world.\n"};
+    wChar text[256] = {"askd103u508DG)h1935h9ga(G091g51-351349098d-80g=13)sd'fl[4164-19]"};
 
-    fea_encrypt_test((wByte *)text, strlen(text));
+    fea_encrypt_test((wByte *)text, strlen(text), wmkc::crypto::xcryptMode::CFB, 1);
 
     return 0;
 }
