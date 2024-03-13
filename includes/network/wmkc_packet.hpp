@@ -1,13 +1,7 @@
 /*
-* ### Big-endian
-* 
-* 1. packet seq:    4 Bytes.
-* 2. packet length: 4 Bytes.
-* 3. packet crc32:  4 Bytes (seq + length).
-* 4. packet data:   [packet length] Bytes.
-* 5. packet sha256: 32 Bytes.
-* 6. packet end:    8 Bytes. [53 4e 45 02 4e 01 44 00]
+* 此C++代码的一切请参考自己编写的Python代码中的packet.py进行编写
 */
+
 #include <config/wmkc.hpp>
 
 #if WMKC_SUPPORT
@@ -21,23 +15,11 @@
 #include <zlib.h>
 #include <lzma.h>
 
-#define WMKC_PACKET_END "\x53\x4e\x45\x02\x4e\x01\x44\x00"
-#define WMKC_PACKET_END_LEN 8
-
 namespace wmkc {
     namespace net {
         class packet {
             private:
                 net::Socket fd;
-
-                // order: [Seq>Length>CRC>Data>Digest>End]
-                wByte digest[32]; // SHA-256 Digest
-                wU32 _;          // nothing...just pad
-                wU32 seq;        // packet seq
-                wU32 crc;        // [seq + length] crc
-                wU32 length;     // packet data length
-                wByte *data;      // packet data
-                wByte end[8];     // packet end
 
             public:
                 packet(net::Socket current_fd);

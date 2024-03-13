@@ -1,5 +1,6 @@
 #include <network/wmkc_dns.hpp>
 
+// 需要根据RFC 1035标准来构造和解析DNS报文
 std::string create_dns_qurty(std::string hostname)
 {
     std::vector<std::string> tokens;
