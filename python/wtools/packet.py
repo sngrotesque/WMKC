@@ -1,29 +1,63 @@
+''' Markdown
+# 网络传输包设计 (Big-endian)
+
+1. **proto ver**[^1]:   4 Bytes.
+3. **session id**[^2]:  4 Bytes.
+2. **packet seq**[^3]:  4 Bytes.
+4. **packet size**[^4]: 4 Bytes.
+5. **packet time**[^5]: 8 Bytes.
+6. **packet data**[^6]: [packet length] Bytes.
+7. **packet crc**[^7]:  4 Bytes.
+
+如需考虑加密和认证，请使用OpenSSl库对数据进行加密传输。
+
+[^1]: 这个网络包所使用的协议版本。
+[^2]: 这个网络包的会话ID。
+[^3]: 这个网络包的序号，用于纠正包顺序。
+[^4]: 这个网络包包含的数据的长度。
+[^5]: 这个网络包发送时的时间戳，使用double类型的浮点数表示，保留4位小数。
+[^6]: 这个网络包实际包含的数据。
+[^7]: 这个网络包CRC32校验码，包含前面的所有数据，所以请确保前面所有数据的大小不超过2<sup>32</sup>-1字节长度。
+
+请不要考虑在打包数据包时执行压缩，除非有非常好的点子，请让使用者直接传入压缩后的数据。
 '''
-1. packet seq:    4 Bytes.
-2. packet length: 4 Bytes.
-3. packet crc32:  4 Bytes (seq + length).
-4. packet data:   [packet length] Bytes.
-5. packet sha256: 32 Bytes.
-6. packet end:    8 Bytes. [53 4e 45 02 4e 01 44 00]
-'''
-from .crypto import w_crypto
-from .utils import w_utils
-import socket
+from .crypto import zlib_crc32
+
 import struct
-import zlib
+import time
 
-def pack_uint32(n :int):
-    return struct.pack('!I', n)
+class packet:
+    def __init__(self, proto_ver :int = 0x00000000, session_id :int = 0x00000000):
+        self.proto_ver = proto_ver
+        self.session_id = session_id
 
-class w_packet:
-    def send(self, fd :socket.socket, seq :int, data :bytes):
-        packet_data = w_utils().lzma2_compress(data)
-        packet_seq = pack_uint32(seq)
-        packet_len = pack_uint32(len(packet_data))
-        packet_crc = pack_uint32(zlib.crc32(packet_data))
-        packet = packet_seq + packet_len + packet_crc + packet_data
-        packet += w_crypto().hash_sum('sha256', data = packet)[0]
-        packet += b'\x53\x4e\x45\x02\x4e\x01\x44\x00'
-        # fd.sendall(fd)
-        print(packet)
+    def pack(self, data :bytes, seq :int = 1):
+        data_len = len(data)
 
+        packet = struct.pack(f'!IIIId{data_len}s',
+            self.proto_ver,   # protocol version
+            self.session_id,  # session id
+            seq,              # sequence
+            data_len,    # the length of compressed data
+            time.time(),      # current timestamp
+            data)        # compressed data
+        packet += struct.pack('!I', zlib_crc32(packet))
+
+        return packet
+
+    def unpack(self, content :bytes):
+        proto_ver, session_id, seq, size, timer = struct.unpack('!IIIId', content[:24])
+        data, crc = struct.unpack(f'!{size}sI', content[24:])
+
+        tmp = struct.pack(f'!IIIId{size}s',
+            proto_ver,   # protocol version
+            session_id,  # session id
+            seq,         # sequence
+            size,        # the length of data
+            timer,       # current timestamp
+            data)        # data
+
+        if zlib_crc32(tmp) != crc:
+            raise RuntimeError(f'The obtained package has a different CRC than the original package.')
+
+        return proto_ver, session_id, seq, size, timer, data, crc

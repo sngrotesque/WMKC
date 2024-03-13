@@ -1,12 +1,21 @@
-### Big-endian
+# 网络传输包设计 (Big-endian)
 
-1. packet seq:    4 Bytes.
-2. packet length: 4 Bytes.
-3. packet crc32:  4 Bytes (seq + length).
-4. packet data:   [packet length] Bytes.
-5. packet sha256: 32 Bytes.
-6. packet end:    8 Bytes. [53 4e 45 03 4e 04 45 05]
+1. **proto ver**[^1]:   4 Bytes.
+3. **session id**[^2]:  4 Bytes.
+2. **packet seq**[^3]:  4 Bytes.
+4. **packet size**[^4]: 4 Bytes.
+5. **packet time**[^5]: 8 Bytes.
+6. **packet data**[^6]: [packet length] Bytes.
+7. **packet crc**[^7]:  4 Bytes.
 
+如需考虑加密和认证，请使用OpenSSl库对数据进行加密传输。
 
+[^1]: 这个网络包所使用的协议版本。
+[^2]: 这个网络包的会话ID。
+[^3]: 这个网络包的序号，用于纠正包顺序。
+[^4]: 这个网络包包含的数据的长度。
+[^5]: 这个网络包发送时的时间戳，使用double类型的浮点数表示，保留4位小数。
+[^6]: 这个网络包实际包含的数据。
+[^7]: 这个网络包CRC32校验码，包含前面的所有数据，所以请确保前面所有数据的大小不超过2<sup>32</sup>-1字节长度。
 
-
+请不要考虑在打包数据包时执行压缩，除非有非常好的点子，请让使用者直接传入压缩后的数据。

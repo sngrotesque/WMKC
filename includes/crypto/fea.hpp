@@ -69,14 +69,6 @@ namespace wmkc {
                 wVoid cipher(wByte *p, wByte *roundKey);
                 wVoid invCipher(wByte *c, wByte *roundKey);
 
-            public:
-                wByte key[WMKC_FEA_BL << 1];
-                wByte iv[WMKC_FEA_BL];
-                wByte nonce[WMKC_FEA_BL >> 1];
-                wByte roundKey[sizeof(key) * WMKC_FEA_NR]; // len(key) * WMKC_FEA_NR
-                wU32 segmentSize;
-
-                // 完全编写完成这个算法库之后，请将这些加密算法移至private域
                 wVoid ecb_encrypt(wByte *p);
                 wVoid ecb_decrypt(wByte *c);
 
@@ -87,6 +79,13 @@ namespace wmkc {
 
                 wVoid cfb_encrypt(wByte *p, wSize n, wU32 segmentSize);
                 wVoid cfb_decrypt(wByte *c, wSize n, wU32 segmentSize);
+
+            public:
+                wByte key[WMKC_FEA_BL << 1];
+                wByte iv[WMKC_FEA_BL];
+                wByte nonce[WMKC_FEA_BL >> 1];
+                wByte roundKey[sizeof(key) * WMKC_FEA_NR]; // len(key) * WMKC_FEA_NR
+                wU32 segmentSize;
 
                 //////////////////////////////////////////////////////////////////
 

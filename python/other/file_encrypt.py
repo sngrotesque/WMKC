@@ -21,8 +21,7 @@ def aes_ctr_xcrypt(content :bytes, key :bytes, nonce :bytes):
     return AES.new(mode = AES.MODE_CTR, key = key, nonce = nonce).encrypt(content)
 
 class fc:
-    def __init__(self, inPath :str, outPath :str, PubKeyPEM_Path :str, PriKeyPEM_Path :str,
-                overwriteFile :bool = True):
+    def __init__(self, inPath :str, outPath :str, PubKeyPEM_Path :str, PriKeyPEM_Path :str, overwriteFile :bool = True):
         if os.stat(inPath).st_size > 2_147_483_648:
             raise RuntimeError(f'The \'{inPath}\' file exceeds 2GB in size, please split the file!')
         if inPath == outPath:
