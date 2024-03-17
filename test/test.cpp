@@ -10,6 +10,20 @@
 const wByte *fea_test_key = (wByte *)"[CeN&qmUNso53Q4|E$H<RW7;Y%?f.*~J";
 const wByte *fea_test_iv  = (wByte *)"_wnMsGmwfV=Q13]l";
 
+class wBuffer {
+    public:
+        wByte *data;
+        wSize size;
+        wBuffer(wByte *_d, wSize _s)
+        : data(_d), size(_s) {}
+        wBuffer() {}
+        ~wBuffer()
+        {
+            delete[] this->data;
+            this->size = 0;
+        }
+};
+
 void fea_speed(wmkc::crypto::xcryptMode mode, wSize length = 16777216)
 {
     wmkc::crypto::fea fea(fea_test_key, fea_test_iv);
@@ -27,7 +41,7 @@ void fea_speed(wmkc::crypto::xcryptMode mode, wSize length = 16777216)
     delete[] buffer;
 }
 
-void fea_encrypt_test(wByte *data, wSize size, wmkc::crypto::xcryptMode mode, wBool encrypt)
+void fea_encrypt_test(wByte *data, wSize size, wmkc::crypto::xcryptMode mode, wBool encrypt, wBool showHexStream)
 {
     wmkc::crypto::fea fea(fea_test_key, fea_test_iv, 64);
 
@@ -60,14 +74,42 @@ void fea_encrypt_test(wByte *data, wSize size, wmkc::crypto::xcryptMode mode, wB
         fea.decrypt(data, size, mode);
         std::cout << "Plaintext:\n";
     }
-    wmkc::misc::PRINT(data, size, 32, (size % 32), true);
+
+    if(showHexStream) {
+        wmkc::misc::PRINT(data, size, 32, (size % 32), true);
+    }
+}
+
+wBuffer file_read(const wchar_t *path)
+{
+    std::fstream fp(path, std::ios::binary | std::ios::in | std::ios::ate);
+    wBuffer buffer;
+
+    buffer.size = fp.tellg();
+    buffer.data = new wByte[buffer.size];
+
+    fp.seekg(0);
+    fp.read((wChar *)buffer.data, buffer.size);
+
+    fp.close();
+    return buffer;
+}
+
+void fea_test()
+{
+    wChar text[256] = {"askd103u508DG)h1935h9ga(G091g51-351349098d-80g=13)sd'fl[4164-19]"};
+    fea_encrypt_test((wByte *)text, strlen(text), wmkc::crypto::xcryptMode::CFB, 1, 1);
 }
 
 int main()
 {
-    wChar text[256] = {"askd103u508DG)h1935h9ga(G091g51-351349098d-80g=13)sd'fl[4164-19]"};
+    wBuffer buffer = file_read(L"f:/A-传送文件夹/91看片_8.18.3402c6616.apk");
 
-    fea_encrypt_test((wByte *)text, strlen(text), wmkc::crypto::xcryptMode::CFB, 1);
+    wmkc::misc::PRINT(buffer.data, 32, 32, 1, 0);
+
+    fea_encrypt_test(buffer.data, buffer.size, wmkc::crypto::xcryptMode::CTR, 1, 0);
+
+    wmkc::misc::PRINT(buffer.data, 32, 32, 1, 0);
 
     return 0;
 }

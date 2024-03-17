@@ -9,3 +9,4 @@ def create_random_key_iv(key_len, iv_len):
 
 def hexToBytesAndPrint(data :str):
     return binascii.a2b_hex(''.join(data.strip().split()))
+
