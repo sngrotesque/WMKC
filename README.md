@@ -28,10 +28,10 @@
 
 #### v7.0.0
 1.  所有C++代码重新组织代码结构，将所有功能列入wmkc命名空间，并将原有的类更名。  
-    例如：wmkcBase64变为wmkc::base64，其中的方法encode变为wmkc::base64().encode()
+    例如：wmkcBase64变为`wmkc::base64`，其中的方法encode变为`wmkc::base64().encode()`
 2.  重新优化所有代码。
-3.  修复了FEA加密算法的一个密钥长度隐患
-4.  完成了wmkc::structure::pack，但是存在一个使用时的隐患，后续考虑如何解决。
+3.  修复了FEA加密算法的一个密钥长度隐患。
+4.  完成了`wmkc::structure::pack`，但是需要使用者注意`C/C++`的特性，解释在[wmkc_struct.hpp](includes/wmkc_struct.hpp)头部。
 
 #### v6.6.6
 1.  C++代码为完全复刻C代码的内容，但是修复了各种问题与难用性。

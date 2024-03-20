@@ -13,7 +13,7 @@ def hexToBytesAndPrint(data :str):
 
 
 content = '''
-00 00 00 00 00 00 00 00 00 00 01 eb 00 00 00 00 00 00 7f fb 00 00 00 00 40 48 f5 c3
+40 48 f5 c3 40 a0 00 00 3f b9 99 99 99 99 99 9a 40 48 f5 c3
 '''
-res = struct.unpack("!dddf", hexToBytesAndPrint(content))
+res = struct.unpack("!ffdf", hexToBytesAndPrint(content))
 print(res)
