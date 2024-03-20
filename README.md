@@ -31,7 +31,10 @@
     例如：wmkcBase64变为`wmkc::base64`，其中的方法encode变为`wmkc::base64().encode()`
 2.  重新优化所有代码。
 3.  修复了FEA加密算法的一个密钥长度隐患。
-4.  完成了`wmkc::structure::pack`，但是需要使用者注意`C/C++`的特性，解释在[wmkc_struct.hpp](includes/wmkc_struct.hpp)头部。
+4.  完成了`wmkc::structure::pack`，但是需要使用者注意`C/C++`的特性，解释在[wmkc_struct.hpp](includes/wmkc_struct.hpp)头部。  
+    本人目前的能力，无法在C++中实现Python中struct.unpack能够达到的效果，所以决定将此功能内置于[wmkc::packet](includes/network/wmkc_packet.hpp)中。  
+    毕竟基本上只有在处理网络包时会需要打包单个普通类型的数据。  
+    最终，决定使用```std::vector<std::any>```。
 
 #### v6.6.6
 1.  C++代码为完全复刻C代码的内容，但是修复了各种问题与难用性。

@@ -1,5 +1,7 @@
 #include <config/wmkc.hpp>
 
+// 此库可兼容Python的struct库的大部分功能
+
 /**
  * 对于在使用浮点数的情况下的pack函数出现问题的解决方法：
  *    ！！！不要使用直接的整数！！！
@@ -14,6 +16,7 @@
 #define WMKC_CPP_STRUCT
 #include <wmkc_exception.hpp>
 
+#include <any>
 #include <vector>
 #include <cstdarg>
 
@@ -117,8 +120,10 @@ namespace wmkc {
     class structure {
         public:
             structure() {}
+
             std::string pack(std::string format, ...);
-            std::vector<double> unpack(std::string format, std::string args);
+
+            std::vector<std::any> unpack(std::string format, std::string buffer);
     };
 }
 
