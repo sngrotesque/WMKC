@@ -1,86 +1,116 @@
 #include <wmkc_struct.hpp>
 
-static const wByte byteOrder[] = {
-    '@', // 按原样顺序
-    '>', // 按大端序
-    '<', // 按小端序
-    '!'  // 网络端序（大端序）
-};
-
-static const wByte formatSymbol[] = {
-    'B', // unsigned char  -> uint8_t
-    'H', // unsigned short -> uint16_t
-    'I', // unsigned int   -> uint32_t
-    'Q', // unsigned long  -> uint64_t
-    'N', // unsigned long long -> size_t
-    'f', // float
-    'd'  // double
-};
-
-wVoid wmkc::structure::verifySymbol(const std::string format, const wSize args_length)
+wBool check_LE()
 {
-    const wByte *bo_bp = byteOrder;
-    const wByte *bo_ep = byteOrder + sizeof(byteOrder);
-    const wByte *fy_bp = formatSymbol;
-    const wByte *fy_ep = formatSymbol + sizeof(formatSymbol);
-    wSize expected_length;
-    wBool bo_ok, fy_ok;
+    int n = 1;
+    return (*((char*)&n)==1)?(true):(false);
+}
 
-    // 判断是否存在字节序控制字符
-    this->orderSymbol = (std::find(bo_bp, bo_ep, format[0]) != bo_ep)?(format[0]):(0x00);
-    // 检测给出的格式符数量是否等于给出的参数数量
-    if((expected_length = (this->orderSymbol)?(format.size() - 1):(format.size())) != args_length) {
-        wmkc::exception(wmkcErr_Err, "wmkc::structure::verifySymbol", std::string("pack expected " + \
-            std::to_string(expected_length) + " items for packing (got " + std::to_string(args_length) + ")."));
+wVoid swap_byte(wChar *array, wU32 l, wU32 r)
+{
+    wChar swap;
+    swap = *(array + l);
+    *(array + l) = *(array + r);
+    *(array + r) = swap;
+}
+
+wVoid change_endian(wChar *array, wU32 size)
+{
+    switch(size) {
+        case 2:
+            swap_byte(array, 0, 1);
+            break;
+        case 4:
+            swap_byte(array, 0, 3);
+            swap_byte(array, 1, 2);
+            break;
+        case 8:
+            swap_byte(array, 0, 7);
+            swap_byte(array, 1, 6);
+            swap_byte(array, 2, 5);
+            swap_byte(array, 3, 4);
+            break;
+    }
+}
+
+template <typename T>
+std::string get_bytes_result(T n, wU32 size, wBool change)
+{
+    wChar buffer[sizeof(T)] = {0};
+    memcpy(buffer, &n, sizeof(T));
+    if(change) {
+        change_endian(buffer, sizeof(T));
+    }
+    return std::string(buffer, sizeof(T));
+}
+
+template <typename T>
+std::string single_pack(wChar format, wmkc::endianness current_endian, wmkc::endianness specify_endian, T arg)
+{
+    wBool change = ((specify_endian!=wmkc::endianness::NO)&&(current_endian!=specify_endian))?(true):(false);
+    std::string results;
+
+    switch(format) {
+        case 'B':
+            results = get_bytes_result(arg, 1, change); break;
+        case 'H':
+            results = get_bytes_result(arg, 2, change); break;
+        case 'I':
+        case 'f':
+            results = get_bytes_result(arg, 4, change); break;
+        case 'Q':
+        case 'N':
+        case 'd':
+            results = get_bytes_result(arg, 8, change); break;
+    }
+    return results;
+}
+
+std::string wmkc::structure::pack(std::string format, ...)
+{
+    wmkc::endianness current_endian = (check_LE())?(wmkc::endianness::LE):(wmkc::endianness::BE);
+    wmkc::endianness specify_endian;
+    std::string results;
+
+    switch(format[0]) {
+        case '>':
+        case '!':
+            specify_endian = wmkc::endianness::BE; break;
+        case '<':
+            specify_endian = wmkc::endianness::LE; break;
+        default:
+            specify_endian = wmkc::endianness::NO; break;
     }
 
-    // 检查所有格式符是否合法
-    for(const auto &i : format) {
-        if(!(fy_ok = (std::find(fy_bp, fy_ep, i) != fy_ep)) && !(bo_ok = (std::find(bo_bp, bo_ep, i) != bo_ep))) {
-            wmkc::exception(wmkcErr_Err, "wmkc::structure::verifySymbol", "bad char in struct format");
+    va_list va;
+    va_start(va, format);
+
+    for(const char &fm : format) {
+        switch(fm) {
+            case 'B':
+                results.append(single_pack(fm, current_endian, specify_endian, (wByte)va_arg(va, int)));
+                break;
+            case 'H':
+                results.append(single_pack(fm, current_endian, specify_endian, (wU16)va_arg(va, int)));
+                break;
+            case 'I':
+                results.append(single_pack(fm, current_endian, specify_endian, (wU32)va_arg(va, int)));
+                break;
+            case 'Q':
+            case 'N':
+                results.append(single_pack(fm, current_endian, specify_endian, (wSize)va_arg(va, wSSize)));
+                break;
+            case 'f':
+                results.append(single_pack(fm, current_endian, specify_endian, (float)va_arg(va, double)));
+                break;
+            case 'd':
+                results.append(single_pack(fm, current_endian, specify_endian, (double)va_arg(va, double)));
+                break;
         }
     }
-}
 
-wmkc::structure::structure()
-: orderSymbol(), swapEndian(), bit16(), bit32(), bit64()
-{
+    va_end(va);
 
-}
-
-std::string wmkc::structure::pack(std::string format, std::vector<wSize> args)
-{
-    if(format.empty()) {
-        return std::string();
-    }
-    std::string result;
-    wU32 index;
-
-    this->verifySymbol(format, args.size()); // 检查格式符是否合法
-
-    // 判断是否存在字节序控制字符
-    if(this->orderSymbol) {
-        // 判断指定的字节序是否与本机不同，如果是就将切换字节序的布尔值置为真
-        if((WMKC_LE_DIAN && (this->orderSymbol == '>')) ||
-            (WMKC_LE_DIAN && this->orderSymbol == '!') ||
-            (!WMKC_LE_DIAN && (this->orderSymbol == '<'))) {
-            this->swapEndian = true;
-        }
-    }
-
-    ///////////////////////////////////////////////////
-    // 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊不想写了好累啊
-    ///////////////////////////////////////////////////
-
-    // std::cout << "everything ok." << std::endl;
-
-    return result;
-}
-
-std::vector<wSize> wmkc::structure::unpack(std::string format, std::string args)
-{
-    std::vector<wSize> result;
-
-    return result;
+    return results;
 }
 

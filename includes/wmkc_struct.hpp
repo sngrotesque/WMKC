@@ -1,13 +1,19 @@
 #include <config/wmkc.hpp>
 
-// 请确保先用最简单的方式实现这个库，后续再来优化性能。
+/**
+ * 对于在使用float和double都存在的情况下的pack函数出现问题的解决方法：
+ * 1. 将float作为double传入（因为这是va_list的问题，它需要内存对齐，而float会被自动提升到double从而导致内存的数据不对）
+ * 2. 修改实现的代码，放弃va_list的方式。
+ * 
+ * 目前只有这两种方法，没办法了。
+*/
 #if WMKC_SUPPORT
 #ifndef WMKC_CPP_STRUCT
 #define WMKC_CPP_STRUCT
 #include <wmkc_exception.hpp>
 
-#include <algorithm>
 #include <vector>
+#include <cstdarg>
 
 /**
  *  @brief Python Struct
@@ -105,21 +111,12 @@
 */
 
 namespace wmkc {
+    enum class endianness {NO, LE, BE};
     class structure {
-        private:
-            wVoid verifySymbol(const std::string format, const wSize args_length);
-
         public:
-            // 这些数据成员请在实际上线时转为私有成员
-            wByte orderSymbol;
-            wBool swapEndian;
-            wByte bit16[2];
-            wByte bit32[4];
-            wByte bit64[8];
-
-            structure();
-            std::string pack(std::string format, std::vector<wSize> args);
-            std::vector<wSize> unpack(std::string format, std::string args);
+            structure() {}
+            std::string pack(std::string format, ...);
+            std::vector<double> unpack(std::string format, std::string args);
     };
 }
 
