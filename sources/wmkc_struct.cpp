@@ -116,5 +116,8 @@ std::string wmkc::structure::pack(std::string format, ...)
 
 std::vector<std::any> unpack(std::string format, std::string buffer)
 {
+    std::vector<std::any> results;
 
+
+    return results;
 }

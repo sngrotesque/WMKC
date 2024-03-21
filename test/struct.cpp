@@ -19,7 +19,7 @@ wVoid struct_pack_test()
 
 int main(int argc, char **argv)
 {
-    struct_pack_test();
+    
 
     return 0;
 }
