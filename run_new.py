@@ -115,6 +115,7 @@ def main():
     cmp = compile(sys.argv[1], sys.argv[2:])
 
     cmp.add_parameter('-I includes')
+    cmp.add_parameter('-I sources')
 
     # cmp.add_parameter('library/qrcode/qrcode.cpp')
 

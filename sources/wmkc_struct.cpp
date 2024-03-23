@@ -81,6 +81,7 @@ std::string wmkc::structure::pack(std::string format, ...)
         default:
             specify_endian = wmkc::endianness::NO; break;
     }
+    format.erase(0, 1);
 
     va_list va;
     va_start(va, format);
@@ -106,6 +107,8 @@ std::string wmkc::structure::pack(std::string format, ...)
             case 'd':
                 results.append(single_pack(fm, current_endian, specify_endian, (double)va_arg(va, double)));
                 break;
+            default:
+                wmkc::exception(wmkcErr_Err, "wmkc::structure::pack", "bad char in struct format");
         }
     }
 
@@ -114,7 +117,7 @@ std::string wmkc::structure::pack(std::string format, ...)
     return results;
 }
 
-std::vector<std::any> unpack(std::string format, std::string buffer)
+std::vector<std::any> wmkc::structure::unpack(std::string format, std::string buffer)
 {
     std::vector<std::any> results;
 
