@@ -41,13 +41,13 @@ class imgToTextImage:
         return (value >> 16, (value & 0xff00) >> 8, value & 0xff)
 
     def __get_brightness_of_color(self, r :int, g :int, b :int, level :int):
-        if level == 32:
+        if level == 32: # Level: 32
             index = int((r*0.299 + g*0.587 + b*0.114) / 8)
             return r'WMHSQGFEDB@8&#$%?+\/^][|!*=~-:. '[index-1 if index == 32 else index]
-        elif level == 16:
+        elif level == 16: # Level: 16
             index = int((r*0.299 + g*0.587 + b*0.114) / 16)
             return r'WM@GB%8&#*+=-:. '[index-1 if index == 16 else index]
-        else:
+        else: # Level: 8
             index = int((r*0.299 + g*0.587 + b*0.114) / 32)
             return r'#*+=-:. '[index-1 if index == 8 else index]
 
@@ -78,7 +78,7 @@ class imgToTextImage:
             if not blackAndWhite:
                 self.__draw_primary_colours(draw, draw_string)
             else:
-                self.__draw_black_white(draw, fore_color)
+                self.__draw_black_white(draw, fore_color, brightnessLevel)
 
             img.save(self.dst_path)
             if show:
