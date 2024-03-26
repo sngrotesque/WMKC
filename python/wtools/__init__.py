@@ -7,6 +7,8 @@ from .packet import packet
 
 from .socket import tcp_socket, udp_socket
 
+from .image import imgToTextImage
+
 def fread(path :str, open_mode :str = 'rb', encoding :str = None):
         with open(path, open_mode, encoding = encoding) as f_obj:
             return f_obj.read()
