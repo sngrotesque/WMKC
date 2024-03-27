@@ -141,7 +141,7 @@ def main():
 
     # cmp.add_parameter('sources/wmkc_base64.cpp')
     # cmp.add_parameter('sources/wmkc_random.cpp')
-    cmp.add_parameter('sources/wmkc_struct.cpp')
+    # cmp.add_parameter('sources/wmkc_struct.cpp')
     # cmp.add_parameter('sources/wmkc_time.cpp')
     # cmp.add_parameter('sources/wmkc_pad.cpp')
 

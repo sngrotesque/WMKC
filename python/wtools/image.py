@@ -24,7 +24,7 @@ class imgToTextImage:
         self.pix           = None
 
         with Image.open(self.src_path) as img:
-            print(f'Original image width: {img.size[0]}, height: {img.size[1]}.')
+            # print(f'Original image width: {img.size[0]}, height: {img.size[1]}.')
             new_size = (int(img.size[0] * self.resize_factor), int(img.size[1] * self.resize_factor))
             with img.resize(new_size, Image.Resampling.LANCZOS) as new_img:
                 with new_img.convert('RGB') as new_new_img:
@@ -35,7 +35,7 @@ class imgToTextImage:
         self.canvas        = np.ndarray((self.height * self.scale, self.width * self.scale, 3), np.uint8)
         self.canvas[:,:,:] = self.background
 
-        print(f'New image width: {self.width}, height: {self.height}')
+        # print(f'New image width: {self.width}, height: {self.height}')
 
     def __get_rgb_tuple(self, value :int):
         return (value >> 16, (value & 0xff00) >> 8, value & 0xff)
@@ -61,13 +61,18 @@ class imgToTextImage:
                     index += 1
 
     def __draw_black_white(self, draw_obj :ImageDraw.Draw, fore_color :int, level :int):
+        # file = open('C:/Users/sn/Desktop/收纳/result.txt', 'w', encoding='UTF-8')
         fore_color = self.__get_rgb_tuple(fore_color)
         for y in range(self.height):
             for x in range(self.width):
                 if (not (x % self.sample_step)) and (not (y % self.sample_step)):
                     r, g, b = self.pix[x, y]
-                    draw_obj.text((x * self.scale, y *self.scale), text = self.__get_brightness_of_color(r, g, b, level),
+                    char = self.__get_brightness_of_color(r, g, b, level)
+                    draw_obj.text((x * self.scale, y *self.scale), text = char,
                         fill = fore_color, font = self.font)
+        #             file.write(char)
+        #     file.write('\n')
+        # file.close()
 
     def draw(self, draw_string :str = 'helloworld', fore_color :int = 0x0000000, show :bool = False, blackAndWhite :bool = False, brightnessLevel :int = 32):
         if (brightnessLevel != 32) and (brightnessLevel != 16) and (brightnessLevel != 8):
